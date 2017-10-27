@@ -13,28 +13,6 @@ TextDescriptor <- function(f, label) {
 }
 
 
-label_dimensions <- function(d, data, ...) {
-  UseMethod("label_dimensions", d)
-}
-
-label_dimensions.TextDescriptor <- function(
-  d, data, fontsize, lineheight, ...
-) { # in pt
-  val   <- attr(d, "f")(data)
-  return(
-    unit(length(val)*lineheight, "pt"),
-    unit(max(sapply(val, nchar))*fontsize, "pt")
-  )
-}
-
-
-labelGrob <- function(td, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
-  UseMethod("labelGrob", td)
-}
-
-valueGrob <- function(td, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
-  UseMethod("valueGrob", td)
-}
 
 labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = gpar(), vp = NULL, ...) {
   lbl         <- attr(td, "label")(data)

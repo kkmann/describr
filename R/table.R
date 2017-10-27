@@ -1,4 +1,4 @@
-describe <- function(df, by = NULL, ...) {
+dtable <- function(df, by = NULL, ...) {
 
   by     = as.character(substitute(by))
 
