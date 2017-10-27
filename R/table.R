@@ -77,29 +77,62 @@ dtableGrob <- function(dscr,
   }
 
   g <- gtable(
-    widths  = rep(unit(1/n_col, "npc"), n_col),
-    heights = rep(unit(1/n_row, "npc"), n_row)
+    widths  = convertWidth(rep(unit(1/n_col, "npc"), n_col), unitTo = "in"),
+    heights = unit(rep(0, n_col), "in")
   )
 
   # add header
+  tmp_grob <- fixedWidthTextGrob("Variable", g$widths[1], gp = gpar(), just = c("center", "bottom"), x = unit(.5, "npc"), y = unit(0, "npc"))
   g <- gtable_add_grob(g,
-    textGrob("Variable"), t = 1, b = 1, l = 1, r = 1, clip = TRUE
+    tmp_grob, t = 1, b = 1, l = 1, r = 1, clip = TRUE
   )
-  g <- gtable_add_grob(g,
-    textGrob("Descriptor"), t = 1, b = 1, l = 2, r = 2, clip = TRUE
+  g$heights[1] <- unit(max(
+      convertHeight(g$heights[1], "in", valueOnly = TRUE),
+      convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+    ), "in"
   )
+  tmp_grob <- fixedWidthTextGrob("", g$widths[2], gp = gpar(), just = c("center", "bottom"), x = unit(.5, "npc"), y = unit(0, "npc"))
   g <- gtable_add_grob(g,
-    textGrob("Total"), t = 1, b = 1, l = 3, r = 3, clip = TRUE
+    tmp_grob, t = 1, b = 1, l = 2, r = 2, clip = TRUE
+  )
+  g$heights[1] <- unit(max(
+      convertHeight(g$heights[1], "in", valueOnly = TRUE),
+      convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+    ), "in"
+  )
+  tmp_grob <- fixedWidthTextGrob("Total", g$widths[3], gp = gpar(), just = c("center", "bottom") , x = unit(.5, "npc"), y = unit(0, "npc"))
+  g <- gtable_add_grob(g,
+    tmp_grob, t = 1, b = 1, l = 3, r = 3, clip = TRUE
+  )
+  g$heights[1] <- unit(max(
+      convertHeight(g$heights[1], "in", valueOnly = TRUE),
+      convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+    ), "in"
   )
   if (length(dscr$by) == 1) {
     level_names <- levels(dscr$df[[dscr$by]])
-    for (i in 1:length(level_names)){
-        g <- gtable_add_grob(g,
-          textGrob(level_names[i]), t = 1, b = 1, l = 3 + i, r = 3 + i, clip = TRUE
+    for (i in 1:length(level_names)) {
+      tmp_grob <- fixedWidthTextGrob(level_names[i], g$widths[3 + i],
+                                     gp = gpar(), just = c("center", "bottom"),
+                                     x = unit(.5, "npc"), y = unit(0, "npc")
+                                   )
+      g <- gtable_add_grob(g,
+        tmp_grob, t = 1, b = 1, l = 3 + i, r = 3 + i, clip = TRUE
+      )
+      g$heights[1] <- unit(max(
+          convertHeight(g$heights[1], "in", valueOnly = TRUE),
+          convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+        ), "in"
       )
     }
+    tmp_grob <- fixedWidthTextGrob("p value", g$widths[n_col], gp = gpar(), just = c("center", "bottom"), x = unit(.5, "npc"), y = unit(0, "npc"))
     g <- gtable_add_grob(g,
-      textGrob("p value"), t = 1, b = 1, l = n_col, r = n_col, clip = TRUE
+      tmp_grob, t = 1, b = 1, l = n_col, r = n_col, clip = TRUE
+    )
+    g$heights[1] <- unit(max(
+        convertHeight(g$heights[1], "in", valueOnly = TRUE),
+        convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+      ), "in"
     )
   }
 
@@ -107,8 +140,9 @@ dtableGrob <- function(dscr,
   row_ind <- 2
   for (i in 1:length(dscr$core)) {
     delta <- length(dscr$core[[i]]) # how many rows are added?
+    tmp_grob <- fixedWidthTextGrob(names(dscr$core)[i], g$widths[1], gp = gpar(), just = c("left", "top"), x = unit(0, "npc"), y = unit(1, "npc"))
     g <- gtable_add_grob(g,
-      textGrob(names(dscr$core)[i]), t = row_ind, b = row_ind + delta - 1, l = 1, r = 1, clip = TRUE
+      tmp_grob, t = row_ind, b = row_ind + delta - 1, l = 1, r = 1, clip = TRUE
     )
     row_ind <- row_ind + delta
   }
@@ -117,7 +151,6 @@ dtableGrob <- function(dscr,
   current_row <- 1
   for (i in 1:length(dscr$core)) {
     varname   <- names(dscr$core)[[i]]
-    print(varname)
     current_row <- current_row + 1 # new line for new variable
     for (j in 1:length(dscr$core[[i]])) {
 
@@ -125,17 +158,27 @@ dtableGrob <- function(dscr,
       d <- dscr$core[[i]][[j]]
       current_row <- current_row + j - 1
 
-      print(c(current_row, attr(d, "label")(dscr$df[[varname]])))
-
+      tmp_grob <- justify(labelGrob(d, dscr$df[[varname]]), hjust="left", vjust="top")
       g <- gtable_add_grob(g,
-        labelGrob(d, dscr$df[[varname]]),
+        tmp_grob,
         t = current_row, b = current_row, l = 2, r = 2, clip = TRUE
+      )
+      g$heights[current_row] <- unit(max(
+        convertHeight(g$heights[current_row], "in", valueOnly = TRUE),
+        convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+      ), "in"
       )
 
       # print value grob for total
+      tmp_grob <- justify(valueGrob(d, dscr$df[[varname]]), hjust = "left", vjust="top")
       g <- gtable_add_grob(g,
-        valueGrob(d, dscr$df[[varname]]),
+                           tmp_grob,
           t = current_row, b = current_row, l = 3, r = 3, clip = TRUE
+      )
+      g$heights[current_row] <- unit(max(
+        convertHeight(g$heights[current_row], "in", valueOnly = TRUE),
+        convertHeight(grobHeight(tmp_grob), "in", valueOnly = TRUE)
+      ), "in"
       )
     }
   }

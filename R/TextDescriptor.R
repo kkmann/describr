@@ -28,24 +28,48 @@ label_dimensions.TextDescriptor <- function(
 }
 
 
-labelGrob <- function(td, data, name = NULL, gp = NULL, vp = NULL, ...) {
+labelGrob <- function(td, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
   UseMethod("labelGrob", td)
 }
 
-valueGrob <- function(td, data, name = NULL, gp = NULL, vp = NULL, ...) {
+valueGrob <- function(td, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
   UseMethod("valueGrob", td)
 }
 
-labelGrob.TextDescriptor <- function(td, data, name = NULL, gp = NULL, vp = NULL, ...) {
-  lbl <- attr(td, "label")(data)
-  g   <- gridExtra::tableGrob(lbl, cols = NULL, rows=NULL, theme = gridExtra::ttheme_minimal(base_size = 15), vp = vp)
-  g   <- justify(g, "left", "top")
+labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = gpar(), vp = NULL, ...) {
+  lbl         <- attr(td, "label")(data)
+  n_row       <- length(lbl)
+  lblGrobList <- list()
+  for (i in 1:n_row) {
+    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(lbl[i], width = width, gp = gp, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
+  }
+  g <- gtable(
+    widths  = width,
+    heights = unit(sapply(lblGrobList, function(x) 1.5*convertHeight(grobHeight(x), unitTo = "in", valueOnly = TRUE)), "in")
+  )
+  for (i in 1:n_row) {
+    g <- gtable_add_grob(g,
+      lblGrobList[i], i, 1, i, 1
+    )
+  }
   return(g)
 }
 
-valueGrob.TextDescriptor <- function(td, data, name = NULL, gp = NULL, vp = NULL, ...) {
+valueGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = NULL, vp = NULL, ...) {
   val <- attr(td, "f")(data)
-  g   <- gridExtra::tableGrob(val, cols = NULL, rows = NULL, vp = vp, theme = gridExtra::ttheme_minimal(base_size = 15, core=list(bg_params = list(fill = "white"))))
-  g   <- justify(g, "left", "top")
+  n_row       <- length(val)
+  lblGrobList <- list()
+  for (i in 1:n_row) {
+    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(val[i], width = width, gp = gp, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
+  }
+  g <- gtable(
+    widths  = width,
+    heights = unit(sapply(lblGrobList, function(x) 1.5*convertHeight(grobHeight(x), unitTo = "in", valueOnly = TRUE)), "in")
+  )
+  for (i in 1:n_row) {
+    g <- gtable_add_grob(g,
+                         lblGrobList[i], i, 1, i, 1
+    )
+  }
   return(g)
 }
