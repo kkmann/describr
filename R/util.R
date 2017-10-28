@@ -70,5 +70,6 @@ splitString <- function(text, availwidth = 1, gp = gpar()) {
 
 
 fixedWidthTextGrob <- function(label, width = unit(1, "ncp"), gp = gpar(), ...) {
-  textGrob(splitString(label, availwidth = convertWidth(width, "in", valueOnly = TRUE), gp = gp), gp = gp, ...)
+  textGrob(splitString(label, availwidth = convertWidth(width, "in", valueOnly = TRUE),
+                       gp = gp), gp = gp, ...)
 }

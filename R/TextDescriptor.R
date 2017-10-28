@@ -1,21 +1,18 @@
-TextDescriptor <- function(f, label) {
+TextDescriptor <- function(text, label) {
+
   res <- structure(
-    function(select_statement) {
-      attr(res, "select_statement") <- sys.call()
-      return(res)
-    },
+    list(text = text, label = label),
     class = c("TextDescriptor", "Descriptor")
   )
-  attr(res, "select_statement") <- NULL
-  attr(res, "label") <- label
-  attr(res, "f")     <- f
+
   return(res)
+
 }
 
 
 
 labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = gpar(), vp = NULL, ...) {
-  lbl         <- attr(td, "label")(data)
+  lbl         <- td$label(data)
   n_row       <- length(lbl)
   lblGrobList <- list()
   for (i in 1:n_row) {
@@ -34,7 +31,7 @@ labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NUL
 }
 
 valueGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = NULL, vp = NULL, ...) {
-  val <- attr(td, "f")(data)
+  val <- td$text(data)
   n_row       <- length(val)
   lblGrobList <- list()
   for (i in 1:n_row) {

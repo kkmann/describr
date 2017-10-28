@@ -29,8 +29,12 @@ describe.default <- function(dscr, d, ...) {
 
   vars <- names(eval(as.call(nc)))
 
+  if (is(d, "Descriptor")) {
+    d <- list(d)
+  }
+
   for (i in 1:length(vars)) {
-    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], list(d))
+    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], d)
   }
 
   return(dscr)
@@ -57,13 +61,76 @@ describe_if.default <- function(dscr, d, .predicate, ...) {
 
   vars <- names(eval(as.call(nc)))
 
+  if (is(d, "Descriptor")) {
+    d <- list(d)
+  }
+
   for (i in 1:length(vars)) {
-    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], list(d))
+    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], d)
   }
 
   return(dscr)
 
 }
+
+
+
+descriptorGrob <- function(d, dscr, varname, ...) {
+  UseMethod("descriptorGrob", d)
+}
+
+
+
+descriptorGrob.default <- function(d, dscr, varname, ...) {
+  if (!is(dscr, "describr")) {
+    stop("'dscr' must be of class dscribr")
+  }
+
+  widths <- unit.c(
+    dscr$theme$header.colwidth.descriptors,
+    dscr$theme$header.colwidth.total
+  )
+
+  if (length(dscr$by) == 1) {
+    df <- dscr$df %>% select_(varname, dscr$by) %>% group_by_(dscr$by)
+    lvls      <- levels(dscr$df[[dscr$by]])
+    widths    <- unit.c(
+      widths,
+      rep(dscr$theme$header.colwidth.others, length(lvls))
+    )
+  } else {
+    df <- dscr$df %>% select_(varname)
+    widths    <- unit.c(widths, dscr$theme$header.colwidth.others)
+  }
+  g <- gtable(widths = widths, heights = unit(0, "npc"))
+
+  grobs <- list(
+    lbl   = labelGrob(d, df[[varname]]), # label uses ungrouped data
+    total = valueGrob(d, df[[varname]]) # get value for entire data set
+  )
+  if (length(dscr$by) > 0) {
+    for (i in 1:length(levels(dscr$df[[dscr$by]]))) {
+      lvl <- levels(dscr$df[[dscr$by]])[i]
+      grobs <- c(grobs,
+        list(valueGrob(d, df[[varname]][df[[dscr$by]] == lvl]))
+      )
+    }
+  }
+  if (length(grobs) != length(widths)) {
+    stop("DEBUG")
+  }
+  for (i in 1:length(grobs)) {
+    g <- gtable_add_grob(g, grobs[[i]], 1, i, 1, i) # adjust height
+    g$heights <- convertHeight(
+      unit.pmax(g$heights, grobHeight(grobs[[i]])),
+      unitTo = "in"
+    )
+  }
+
+  return(g)
+
+}
+
 
 
 

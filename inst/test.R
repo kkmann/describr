@@ -3,19 +3,26 @@ library(tidyverse)
 library(gridExtra)
 library(gtable)
 library(grid)
-tmp  <- describe(iris, by = Species)
 
+dummy      <- Statistic(mean, "bla")
 
-
-tmp2 <- Statistic(mean, "bla")
-tmp3 <- TextDescriptor(
+supermean  <- TextDescriptor(
   function(data) sapply(c(mean(data), mean(data)/2), function(x) sprintf("%4.1f", x)),
   function(data) c("mean", "half mean")
 )
 
-tmp4 <- tmp + tmp2(Sepal.Length:Petal.Length) + tmp3(Sepal.Length)
+dtable(iris,by = Species) %>%
+  describe_if(dummy, is.numeric) %>%
+  describe(list(supermean, supermean), Sepal.Width) ->
+  dt
 
-g <- dtableGrob(tmp4)
+g <- headerGrob(dt)
+
+g2 <- variableGrob(dt, "Sepal.Width")
+
+grid.draw(g2)
+
+g <- dtableGrob(dt)
 
 g <- justify(g, "left", "top")
 
@@ -30,5 +37,8 @@ grid.draw(g)
 test <- Descriptor()
 
 dtable(iris, by = Species) %>%
-  describe(test, Sepal.Width) -> la
-la$core$Sepal.Width$variables
+  describe(tmp3, Sepal.Width) -> la
+
+dtable(iris, by = Species) %>%
+  describe_if(list(test, test), is.numeric) -> la2
+
