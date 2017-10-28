@@ -86,21 +86,13 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     stop("'dscr' must be of class dscribr")
   }
 
-  widths <- unit.c(
-    dscr$theme$header.colwidth.descriptors,
-    dscr$theme$header.colwidth.total
-  )
+  widths <- .getColWidths(dscr)[-1] # dont need variable columns
 
   if (length(dscr$by) == 1) {
     df <- dscr$df %>% select_(varname, dscr$by) %>% group_by_(dscr$by)
     lvls      <- levels(dscr$df[[dscr$by]])
-    widths    <- unit.c(
-      widths,
-      rep(dscr$theme$header.colwidth.others, length(lvls))
-    )
   } else {
     df <- dscr$df %>% select_(varname)
-    widths    <- unit.c(widths, dscr$theme$header.colwidth.others)
   }
   g <- gtable(widths = widths, heights = unit(0, "npc"))
 
