@@ -1,6 +1,9 @@
 theme_default <- function() {
   structure(
     list(
+      colwidth.variables.seperator = unit(12, "pt"),
+      colwidth.variables.descriptors = unit(12, "pt"),
+      colwidth.others.seperators  = unit(12, "pt"),
       header.fontsize             = 12, # pt
       header.lineheight           = 1.2 * 12, # pt
       header.colname.variables    = "Variable",

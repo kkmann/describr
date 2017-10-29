@@ -86,11 +86,12 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     stop("'dscr' must be of class dscribr")
   }
 
-  widths <- .getColWidths(dscr)[-1] # dont need variable columns
+  widths <- .getColWidths(dscr)
+  widths <- widths[.startColDesc(dscr):length(widths)] # dont need variable columns
 
   if (length(dscr$by) == 1) {
-    df <- dscr$df %>% select_(varname, dscr$by) %>% group_by_(dscr$by)
-    lvls      <- levels(dscr$df[[dscr$by]])
+    df   <- dscr$df %>% select_(varname, dscr$by) %>% group_by_(dscr$by)
+    lvls <- levels(dscr$df[[dscr$by]])
   } else {
     df <- dscr$df %>% select_(varname)
   }
@@ -98,12 +99,14 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
   grobs <- list(
     lbl   = labelGrob(d, df[[varname]]), # label uses ungrouped data
+    sep   = rectGrob(), # seperator
     total = valueGrob(d, df[[varname]]) # get value for entire data set
   )
   if (length(dscr$by) > 0) {
     for (i in 1:length(levels(dscr$df[[dscr$by]]))) {
       lvl <- levels(dscr$df[[dscr$by]])[i]
       grobs <- c(grobs,
+        list(rectGrob()),
         list(valueGrob(d, df[[varname]][df[[dscr$by]] == lvl]))
       )
     }
@@ -112,11 +115,13 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     stop("DEBUG")
   }
   for (i in 1:length(grobs)) {
-    g <- gtable_add_grob(g, grobs[[i]], 1, i, 1, i) # adjust height
-    g$heights <- convertHeight(
-      unit.pmax(g$heights, grobHeight(grobs[[i]])),
-      unitTo = "in"
-    )
+    if (i %% 2 == 1) {
+      g <- gtable_add_grob(g, grobs[[i]], 1, i, 1, i) # adjust height
+      g$heights <- convertHeight(
+        unit.pmax(g$heights, grobHeight(grobs[[i]])),
+        unitTo = "in"
+      )
+    }
   }
 
   return(g)
