@@ -43,21 +43,21 @@ describe.default <- function(dscr, d, ...) {
 
 
 
-describe_if <- function(dscr, d, .predicate, ...) {
+describe_if <- function(dscr, .predicate, d, ...) {
   UseMethod("describe_if", d)
 }
 
 
 
-describe_if.default <- function(dscr, d, .predicate, ...) {
+describe_if.default <- function(dscr, .predicate, d, ...) {
 
   tmp <- sys.call()
 
-  nc  <- list(quote(select_if), quote(dscr$df))
-
-  for (i in 4:length(tmp)) {
-    nc <- c(nc, tmp[[i]])
-  }
+  nc  <- list(
+    quote(select_if),
+    quote(dscr$df),
+    tmp[[3]]
+  )
 
   vars <- names(eval(as.call(nc)))
 
@@ -80,10 +80,9 @@ descriptorGrob <- function(d, dscr, varname, ...) {
 }
 
 
-
 descriptorGrob.default <- function(d, dscr, varname, ...) {
   if (!is(dscr, "describr")) {
-    stop("'dscr' must be of class dscribr")
+    stop("'dscr' must be of class describr")
   }
 
   widths <- .getColWidths(dscr)
@@ -98,16 +97,18 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   g <- gtable(widths = widths, heights = unit(0, "npc"))
 
   grobs <- list(
-    lbl   = labelGrob(d, df[[varname]]), # label uses ungrouped data
+    lbl   = labelGrob(d, df[[varname]], widths[1]), # label uses ungrouped data
     sep   = rectGrob(), # seperator
-    total = valueGrob(d, df[[varname]]) # get value for entire data set
+    total = valueGrob(d, df[[varname]], df[[varname]], widths[3]) # get value for entire data set
   )
   if (length(dscr$by) > 0) {
     for (i in 1:length(levels(dscr$df[[dscr$by]]))) {
       lvl <- levels(dscr$df[[dscr$by]])[i]
       grobs <- c(grobs,
         list(rectGrob()),
-        list(valueGrob(d, df[[varname]][df[[dscr$by]] == lvl]))
+        list(valueGrob(d, df[[varname]][df[[dscr$by]] == lvl], df[[varname]],
+             dscr$theme$header.colwidth.others)
+        )
       )
     }
   }
@@ -131,12 +132,12 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
 
 
-labelGrob <- function(d, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
+labelGrob <- function(d, data_complete, width, ...) {
   UseMethod("labelGrob", d)
 }
 
 
 
-valueGrob <- function(d, data, width = NULL, name = NULL, gp = NULL, vp = NULL, ...) {
+valueGrob <- function(d, data, data_subset, data_complete, width, ...) {
   UseMethod("valueGrob", d)
 }

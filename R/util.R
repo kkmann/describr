@@ -69,7 +69,42 @@ splitString <- function(text, availwidth = 1, gp = gpar()) {
 }
 
 
-fixedWidthTextGrob <- function(label, width = unit(1, "ncp"), gp = gpar(), ...) {
-  textGrob(splitString(label, availwidth = convertWidth(width, "in", valueOnly = TRUE),
-                       gp = gp), gp = gp, ...)
+fixedWidthTextGrob <- function(label, width = unit(1, "ncp"), ...) {
+  textGrob(splitString(
+      label, availwidth = convertWidth(width, "in", valueOnly = TRUE)
+    ), ...
+  )
+}
+
+cols <- function(dscr) {
+
+  theme <- dscr$theme
+
+  widths <- list(
+    variables = list(col = 2)
+  )
+
+  widths <- unit.c(
+    theme$header.colwidth.variables,
+    theme$colwidth.variables.seperator,
+    theme$header.colwidth.descriptors,
+    theme$colwidth.variables.descriptors,
+    theme$header.colwidth.total
+  )
+
+  if (length(dscr$by) == 1) {
+    lvls      <- levels(dscr$df[[dscr$by]])
+    widths    <- unit.c(
+      widths,
+      rep(unit.c(
+        theme$colwidth.others.seperators,
+        theme$header.colwidth.others
+      ),
+      length(lvls)
+      )
+    )
+  }
+
+  return(widths)
+
 }

@@ -1,1 +1,7 @@
 exportPattern("^[[:alpha:]]+")
+
+import(
+  grid,
+  gtable,
+  tidyverse
+)

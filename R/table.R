@@ -1,4 +1,11 @@
-dtable <- function(df, by = NULL, theme = theme_default(), ...) {
+dtable <- function(
+  df,
+  by = NULL,
+  theme = theme_default(),
+  theme_new = theme_default_tmp(),
+  pvalues = TRUE,
+  totals = TRUE
+) {
 
   by     = as.character(substitute(by))
 
@@ -6,7 +13,7 @@ dtable <- function(df, by = NULL, theme = theme_default(), ...) {
     stop("currently only single stratum supported")
   }
   if (length(by) == 1 & !(by %in% names(df))) {
-      stop(sprintf("stratum 'by = %s' not found"))
+    stop(sprintf("stratum 'by = %s' not found"))
   }
 
   core <- list()
@@ -14,13 +21,15 @@ dtable <- function(df, by = NULL, theme = theme_default(), ...) {
     core[names(df)[i]] <- NULL
   }
 
-
   res <- structure(
     list(
       df    = df,
       by    = by,
       core  = core,
-      theme = theme
+      pvalues = pvalues,
+      totals = totals,
+      theme = theme,
+      them_new = theme_new
     ),
     class = "describr"
   )
@@ -31,71 +40,13 @@ dtable <- function(df, by = NULL, theme = theme_default(), ...) {
 
 
 
-headerGrob <- function(dscr) { # print the header row of the table
-
-  theme <- dscr$theme
-
-  widths <- .getColWidths(dscr)
-
-  col_names <- c(
-    theme$header.colname.variables,
-    "",
-    theme$header.colname.descriptors,
-    "",
-    theme$header.colname.total
-  )
-  if (length(dscr$by) == 1) {
-    lvls      <- levels(dscr$df[[dscr$by]])
-    lvls_tmp  <- sapply(lvls, function(x) c("", x)) # add seperators
-    col_names <- c(col_names, as.character(lvls_tmp))
-    # add row for grouping variable
-    g <- gtable(
-      widths  = widths,
-      heights = unit(c(
-        theme$header.lineheight,
-        theme$header.grouping.seperator.height,
-        theme$header.lineheight
-      ), "pt")
-    )
-    startCol <- .startColLevels(dscr)
-    endCol   <- .endColLevels(dscr)
-    width    <- sum(widths[startCol:endCol])
-    g <- gtable_add_grob(g,
-      fixedWidthTextGrob(dscr$by, width,
-        gp = gpar(), just = c("center", "center"),
-        x = unit(.5, "npc"), y = unit(.5, "npc")
-      ), t = 1, b = 1, l = startCol, r = endCol
-    )
-    g <- gtable_add_grob(g,
-      linesGrob(
-        y = unit(.5, "npc"),
-        gp = gpar(lwd = dscr$theme$header.grouping.seperator.size)
-      ), t = 2, b = 2, l = startCol, r = endCol
-    )
-  } else {
-    g <- gtable(
-      widths  = widths,
-      heights = unit(theme$header.lineheight, "pt")
-    )
-  }
-
-  for (i in 1:length(col_names)) {
-    if (i %% 2 == 1) { # otherwise just seperator, plot later
-      g <- gtable_add_grob(g,
-        fixedWidthTextGrob(col_names[i], g$widths[i],
-          gp = gpar(), just = c("center", "center"),
-          x = unit(.5, "npc"), y = unit(.5, "npc")
-        ),
-        t = 3, b = 3, l = i, r = i
-      )
-    }
-  }
-
-  g <- justify(g, "center", "center")
-
-  return(g)
-
+is.stratified <- function(dscr, ...) {
+  UseMethod("is.stratified", dscr)
 }
+
+is.stratified.describr <- function(dscr, ...) length(dscr$by) == 1
+
+
 
 headerSeperatorGrob <- function(dscr) {
 
@@ -135,6 +86,31 @@ bottomSeperatorGrob <- function(dscr) {
 
 
 
+descriptorSeperatorGrob <- function(dscr) {
+
+  widths <- .getColWidths(dscr)
+  widths <- widths[.startColDesc(dscr):length(widths)] # dont need variable columns
+
+  g <- gtable(
+    widths,
+    dscr$theme$descriptor.seperator.height
+  )
+
+  if (dscr$theme$descriptor.seperator.size > 0) {
+    g <- gtable_add_grob(g,
+                         linesGrob(
+                           y = unit(.5, "npc"),
+                           gp = gpar(lwd = dscr$theme$descriptor.seperator.size)
+                         ), 1, 1, 1, ncol(g)
+    )
+  }
+
+  return(g)
+
+}
+
+
+
 variableGrob <- function(dscr, varname) {
 
   descriptor_list <- dscr$core[[varname]]
@@ -142,6 +118,11 @@ variableGrob <- function(dscr, varname) {
     descriptor_list,
     function(d) descriptorGrob(d, dscr, varname)
   )
+  i <- 1
+  while (i < length(gtable_list)) {
+    gtable_list <- append(gtable_list, list(descriptorSeperatorGrob(dscr)), i)
+    i <- i + 2
+  }
   g <- do.call(rbind, args = gtable_list)
 
   # add variable label
@@ -167,6 +148,27 @@ variableGrob <- function(dscr, varname) {
 }
 
 
+variableSeperatorGrob <- function(dscr) {
+
+  g <- gtable(
+    .getColWidths(dscr),
+    dscr$theme$variable.seperator.height
+  )
+
+  if (dscr$theme$variable.seperator.size > 0) {
+    g <- gtable_add_grob(g,
+                         linesGrob(
+                           y = unit(.5, "npc"),
+                           gp = gpar(lwd = dscr$theme$variable.seperator.size)
+                         ), 1, 1, 1, ncol(g)
+    )
+  }
+
+  return(g)
+
+}
+
+
 
 
 
@@ -182,6 +184,9 @@ dtableGrob <- function(dscr,
 
   for (varname in names(dscr$core)) {
     g <- rbind(g, variableGrob(dscr, varname))
+    if (which(varname == names(dscr$core)) < length(names(dscr$core))) {
+      g <- rbind(g, variableSeperatorGrob(dscr))
+    }
   }
 
   g <- rbind(g, bottomSeperatorGrob(dscr))

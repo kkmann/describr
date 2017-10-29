@@ -11,12 +11,12 @@ TextDescriptor <- function(text, label) {
 
 
 
-labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = gpar(), vp = NULL, ...) {
-  lbl         <- td$label(data)
+labelGrob.TextDescriptor <- function(td, data_complete, width = unit(1, "in"), ...) {
+  lbl         <- td$label(data_complete)
   n_row       <- length(lbl)
   lblGrobList <- list()
   for (i in 1:n_row) {
-    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(lbl[i], width = width, gp = gp, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
+    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(lbl[i], width = width, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
   }
   g <- gtable(
     widths  = width,
@@ -30,12 +30,12 @@ labelGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NUL
   return(g)
 }
 
-valueGrob.TextDescriptor <- function(td, data, width = unit(1, "in"), name = NULL, gp = NULL, vp = NULL, ...) {
-  val <- td$text(data)
+valueGrob.TextDescriptor <- function(td, data_subset, data_complete, width = unit(1, "in"), ...) {
+  val <- td$text(data_subset, data_complete)
   n_row       <- length(val)
   lblGrobList <- list()
   for (i in 1:n_row) {
-    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(val[i], width = width, gp = gp, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
+    lblGrobList <- c(lblGrobList, list(fixedWidthTextGrob(val[i], width = width, just = c("right", "top"), x = unit(1, "npc"), y = unit(1, "npc"))))
   }
   g <- gtable(
     widths  = width,
