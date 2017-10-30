@@ -1,66 +1,111 @@
 headerGrob <- function(dscr) { # print the header row of the table
 
-  theme <- dscr$theme
+  theme <- dscr$theme_new
 
-  widths <- .getColWidths(dscr)
+  add_col_header <- function(gt, cell_grob, width) {
 
-  col_names <- c(
-    theme$header.colname.variables,
-    "",
-    theme$header.colname.descriptors,
-    "",
-    theme$header.colname.total
+    gt <- gtable_add_cols(gt, width, pos = -1)
+    gt <- gtable_add_grob(gt, cell_grob, 1, ncol(gt), 1, ncol(gt), name = cell_grob$name)
+    gt$heights <- convertHeight(
+      unit.pmax(gt$heights, grobHeight(cell_grob)),
+      unitTo = "in"
+    )
+
+    return(gt)
+
+  }
+
+  gt <- gtable(heights = unit(0, "in"))
+
+  # variables column
+  variables_cell <- element_table_grob(
+    theme$header$style$variables,
+    theme$header$labels$variables,
+    theme$colwidths$variables,
+    "header_variables_cell"
   )
+  gt <- add_col_header(gt, variables_cell, theme$colwidths$variables)
 
-  if (length(dscr$by) == 1) {
-    lvls      <- levels(dscr$df[[dscr$by]])
-    lvls_tmp  <- sapply(lvls, function(x) c("", x)) # add seperators
-    col_names <- c(col_names, as.character(lvls_tmp))
-    # add row for grouping variable
-    g <- gtable(
-      widths  = widths,
-      heights = unit(c(
-        theme$header.lineheight,
-        theme$header.grouping.seperator.height,
-        theme$header.lineheight
-      ), "pt")
+  # descriptors column
+  descriptors_cell <- element_table_grob(
+    theme$header$style$descriptors,
+    theme$header$labels$descriptors,
+    theme$colwidths$descriptors,
+    "header_descriptors_cell"
+  )
+  gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
+  gt <- add_col_header(gt, descriptors_cell, theme$colwidths$descriptors)
+
+  # total column
+  if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
+
+    totals_cell <- element_table_grob(
+      theme$header$style$levels,
+      theme$header$labels$total,
+      theme$colwidths$levels,
+      "header_totals_cell"
     )
-    startCol <- .startColLevels(dscr)
-    endCol   <- .endColLevels(dscr)
-    width    <- sum(widths[startCol:endCol])
-    g <- gtable_add_grob(g,
-                         fixedWidthTextGrob(dscr$by, width,
-                                            gp = gpar(), just = c("center", "center"),
-                                            x = unit(.5, "npc"), y = unit(.5, "npc")
-                         ), t = 1, b = 1, l = startCol, r = endCol
-    )
-    g <- gtable_add_grob(g,
-                         linesGrob(
-                           y = unit(.5, "npc"),
-                           gp = gpar(lwd = dscr$theme$header.grouping.seperator.size)
-                         ), t = 2, b = 2, l = startCol, r = endCol
-    )
-  } else {
-    g <- gtable(
-      widths  = widths,
-      heights = unit(theme$header.lineheight, "pt")
-    )
+    gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
+    gt <- add_col_header(gt, totals_cell, theme$colwidths$levels)
+
   }
 
-  for (i in 1:length(col_names)) {
-    if (i %% 2 == 1) { # otherwise just seperator, plot later
-      g <- gtable_add_grob(g,
-                           fixedWidthTextGrob(col_names[i], g$widths[i],
-                                              gp = gpar(), just = c("center", "center"),
-                                              x = unit(.5, "npc"), y = unit(.5, "npc")
-                           ),
-                           t = 3, b = 3, l = i, r = i
+  # levels columns
+  if (is.stratified(dscr)) {
+
+    lvls <- levels(dscr$df[[dscr$by]])
+
+    for (i in 1:length(lvls)) {
+
+      lvl_cell <- element_table_grob(
+        theme$header$style$levels,
+        lvls[i],
+        theme$colwidths$levels,
+        sprintf("header_level_%s_cell", lvls[i])
       )
+      gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
+      gt <- add_col_header(gt, lvl_cell, theme$colwidths$levels)
+
     }
+
   }
 
-  g <- justify(g, "center", "center")
+  # pvalue columns
+  if (dscr$pvalues & is.stratified(dscr)) {
 
-  return(g)
+    pvalues_cell <- element_table_grob(
+      theme$header$style$pvalues,
+      theme$header$labels$pvalues,
+      theme$colwidths$pvalues,
+      "header_pvalues_cell"
+    )
+    gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
+    gt <- add_col_header(gt, pvalues_cell, theme$colwidths$pvalues)
+
+  }
+
+  # add seperator and grouping variable
+  if (is.stratified(dscr)) {
+
+    gt <- gtable_add_rows(gt, heights = theme$header$style$separator$separator_height, pos = 0)
+    colFrom <- grep("totals|level", gt$layout$name)[1]
+    colTo   <- tail(grep("totals|level", gt$layout$name), 1)
+    gt <- gtable_add_grob(gt,
+      element_table_grob(theme$header$style$separator),
+      1, colFrom, 1, colTo, name = "header_separator"
+    )
+
+    grouping_cell <- element_table_grob(
+      theme$header$style$grouping,
+      dscr$by,
+      sum(gt$widths[colFrom, colTo]),
+      "header_grouping_cell"
+    )
+    gt <- gtable_add_rows(gt, heights = convertUnit(grobHeight(grouping_cell), "in"), pos = 0)
+    gt <- gtable_add_grob(gt, grouping_cell, 1, colFrom, 1, colTo, name = "header_grouping_cell")
+
+  }
+
+  return(gt)
 
 }

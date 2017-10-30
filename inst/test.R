@@ -4,29 +4,23 @@ library(gridExtra)
 library(gtable)
 library(grid)
 
-dtable(iris,by = Species) %>%
+dtable(iris, by = Species) %>%
   describe_if(
     is.numeric,
-    list(
-      dscr_n_perc,
-      dscr_mean_sd
-    )
+    list(dscr_n_perc, dscr_mean_sd)
   ) %>%
   describe_if(
     is.factor,
     dscr_freq
   ) %>%
   describe(
-    list(
-      dscr_histogram,
-      dscr_boxplot
-    ),
+    list(dscr_histogram, dscr_boxplot),
     Sepal.Width
   ) ->
-  dt
+dt
 
 # g <- headerGrob(dt)
-#
+
 # g <- descriptorGrob(dummy, dt, "Sepal.Length")
 #
 # g <- variableGrob(dt, "Sepal.Length")

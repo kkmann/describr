@@ -75,57 +75,68 @@ describe_if.default <- function(dscr, .predicate, d, ...) {
 
 
 
+
+
 descriptorGrob <- function(d, dscr, varname, ...) {
   UseMethod("descriptorGrob", d)
 }
 
 
+
 descriptorGrob.default <- function(d, dscr, varname, ...) {
+
   if (!is(dscr, "describr")) {
     stop("'dscr' must be of class describr")
   }
 
-  widths <- .getColWidths(dscr)
-  widths <- widths[.startColDesc(dscr):length(widths)] # dont need variable columns
+  theme <- dscr$theme_new
 
-  if (length(dscr$by) == 1) {
-    df   <- dscr$df %>% select_(varname, dscr$by) %>% group_by_(dscr$by)
+  # start with descriptor
+  gt <- labelGrob(d, dscr$df[[varname]], theme$colwidths$descriptors)
+
+  # total column
+  if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
+
+    # add separator spacing
+    gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
+
+    totals_cell <- valueGrob( # get value for entire data set
+      d, dscr$df[[varname]], dscr$df[[varname]], theme$colwidths$levels
+    )
+    gt <- cbind(gt, totals_cell)
+
+  }
+
+  # levels columns
+  if (is.stratified(dscr)) {
+
     lvls <- levels(dscr$df[[dscr$by]])
-  } else {
-    df <- dscr$df %>% select_(varname)
-  }
-  g <- gtable(widths = widths, heights = unit(0, "npc"))
 
-  grobs <- list(
-    lbl   = labelGrob(d, df[[varname]], widths[1]), # label uses ungrouped data
-    sep   = rectGrob(), # seperator
-    total = valueGrob(d, df[[varname]], df[[varname]], widths[3]) # get value for entire data set
-  )
-  if (length(dscr$by) > 0) {
-    for (i in 1:length(levels(dscr$df[[dscr$by]]))) {
-      lvl <- levels(dscr$df[[dscr$by]])[i]
-      grobs <- c(grobs,
-        list(rectGrob()),
-        list(valueGrob(d, df[[varname]][df[[dscr$by]] == lvl], df[[varname]],
-             dscr$theme$header.colwidth.others)
-        )
+    for (i in 1:length(lvls)) {
+
+      # add separator spacing
+      gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
+
+      lvl_cell <- valueGrob( # get value for entire data set
+        d, dscr$df[[varname]][dscr$df[[dscr$by]] == lvls[i]], dscr$df[[varname]], theme$colwidths$levels
       )
+      gt <- cbind(gt, lvl_cell)
+
     }
-  }
-  if (length(grobs) != length(widths)) {
-    stop("DEBUG")
-  }
-  for (i in 1:length(grobs)) {
-    if (i %% 2 == 1) {
-      g <- gtable_add_grob(g, grobs[[i]], 1, i, 1, i) # adjust height
-      g$heights <- convertHeight(
-        unit.pmax(g$heights, grobHeight(grobs[[i]])),
-        unitTo = "in"
-      )
-    }
+
   }
 
-  return(g)
+  # pvalue columns
+  if (dscr$pvalues & is.stratified(dscr)) {
+
+    # add separator spacing
+    gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
+
+    stop("not implemented")
+
+  }
+
+  return(gt)
 
 }
 
@@ -135,6 +146,8 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 labelGrob <- function(d, data_complete, width, ...) {
   UseMethod("labelGrob", d)
 }
+
+
 
 
 

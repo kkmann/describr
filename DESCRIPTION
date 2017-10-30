@@ -18,6 +18,7 @@ Collate:
   'Statistic.R'
   'TextDescriptor.R'
   'describrHeaderGrob.R'
+  'describrVariableGrob.R'
   'descriptors.R'
   'element_table_cell.R'
   'table.R'
