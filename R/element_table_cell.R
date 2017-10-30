@@ -1,35 +1,77 @@
-element_table_cell_text <- function(size, lineheight = 1.2*size) {
-  structure(list(
-      size       = size,
-      lineheight = lineheight
-    ),
-    class = c("element_cell_text", "element_table_cell", "element_table")
+element_table_cell_text <- function(
+  text_size,
+  text_line_height  = 1.2*text_size,
+  text_color        = NULL,
+  text_transparency = NULL,
+  text_fontfamily   = NULL,
+  text_fontface     = NULL,
+  text_align        = c("center", "center"),
+  text_rotation     = 0,
+  text_padding      = unit(0, "cm"),
+  background_color  = NULL,
+  background_transparency = NULL,
+  frame_line_color  = NULL,
+  frame_line_size   = 1,
+  frame_line_style  = 0
+) {
+
+  structure(
+    as.list(environment()),
+    class = c("element_table_cell_text", "element_table_cell", "element_table")
   )
+
 }
 
-element_table_horizontal_seperator <- function(height, linesize) {
-  structure(list(
-    height = height,
-    linesize = linesize
-  ),
-  class = c("element_table_horizontal_seperator", "element_table_seperator", "element_table")
-  )
+
+
+element_table_cell_grob <- function(e, content, width, ...) {
+  UseMethod("element_table_cell_grob", e)
 }
 
-element_table_vertical_seperator <- function(width, linesize) {
-  structure(list(
-    width = width,
-    linesize = linesize
-  ),
-  class = c("element_table_vertical_seperator", "element_table_seperator", "element_table")
-  )
-}
 
-element_table_cell_plot <- function(width, height) {
-  structure(list(
-    height = height,
-    width  = width
-  ),
-  class = c("element_table_cell_plot", "element_table_cell", "element_table")
+
+element_table_cell_grob.element_table_cell_text <- function(e, label, width, name) {
+
+  rows <- strsplit(
+    splitString(label, availwidth = convertWidth(width - 2*e$text_padding, "in", valueOnly = TRUE)),
+    "\n"
+  )[[1]]
+
+  g <- gtable(
+    widths = width,
+    heights = rep(unit(e$text_line_height, "pt"), length(rows)),
+    name = name
   )
+
+  for (i in 1:length(rows)) {
+    g <- gtable_add_grob(g,
+      justify(textGrob(rows[i],
+        check.overlap = FALSE, name = paste0(name, "_line_", i, "_fg"), gp = gpar(
+            alpha      = e$text_transparency,
+            col        = e$text_color,
+            fontfamily = e$text_fontfamily,
+            fontsize   = e$text_size,
+            fontface   = e$text_fontface,
+            lineheight = e$text_line_height / e$text_size
+          ), rot = e$text_rotation
+        ),
+        hjust = e$text_align[[1]], vjust = e$text_align[[2]], hpadding = e$text_padding
+      ),
+      i, 1, i, 1, Inf
+    )
+  }
+
+  cell <- gtable_add_grob(g,
+    rectGrob(
+      name = paste0(name, "_bg"), gp = gpar(
+        fill  = e$background_color,
+        alpha = e$background_transparency,
+        lty   = e$frame_line_style,
+        col   = e$frame_line_color
+      )
+    ), 1, 1, nrow(g), 1, z = -Inf
+  )
+
+  return(cell)
+
 }

@@ -1,14 +1,16 @@
-justify <- function(x, hjust="center", vjust="center"){
-  w <- sum(x$widths)
-  h <- sum(x$heights)
+justify <- function(x, hjust="center", vjust="center",
+                    hpadding = unit(0, "cm"), vpadding = unit(0, "cm")){
+
+  w <- grobWidth(x) #sum(x$widths)
+  h <- grobHeight(x) #sum(x$heights)
   xj <- switch(hjust,
                center = 0.5,
-               left = 0.5*w,
-               right=grid::unit(1,"npc") - 0.5*w)
+               left = 0.5*w + hpadding,
+               right=grid::unit(1,"npc") - 0.5*w - hpadding)
   yj <- switch(vjust,
                center = 0.5,
-               bottom = 0.5*h,
-               top=grid::unit(1,"npc") - 0.5*h)
+               bottom = 0.5*h + vpadding,
+               top=grid::unit(1,"npc") - 0.5*h - vpadding)
   x$vp <- grid::viewport(x=xj, y=yj)
   return(x)
 }

@@ -11,3 +11,17 @@ Encoding: UTF-8
 LazyData: true
 Imports: tidyverse, gtable, grid
 Suggests: testthat
+Collate: 
+  'util.R'
+  'Descriptor.R'
+  'PlotDescriptor.R'
+  'Statistic.R'
+  'TextDescriptor.R'
+  'describrHeaderGrob.R'
+  'descriptors.R'
+  'element_table_cell.R'
+  'table.R'
+  'test.R'
+  'tests.R'
+  'theme_default.R'
+  'theme_new.R'
