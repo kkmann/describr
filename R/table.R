@@ -1,7 +1,6 @@
 dtable <- function(
   df,
   by = NULL,
-  theme = theme_default(),
   theme_new = theme_default_tmp(),
   pvalues = FALSE,
   totals = TRUE
@@ -28,7 +27,6 @@ dtable <- function(
       core      = core,
       pvalues   = pvalues,
       totals    = totals,
-      theme     = theme,
       theme_new = theme_new
     ),
     class = "describr"
