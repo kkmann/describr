@@ -13,17 +13,13 @@ PlotDescriptor <- function(call, label, minplotheight = unit(1.5, "cm")) {
 
 as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
 
-  pd <- list()
-  pd$call <- substitute(ggplot(aes(variable)) + geom_histogram())
-  pd$label <- function(data) "blaaa"
-
   theme <- dscr$theme_new
 
   lbl <- element_table_grob(
     theme$body$descriptor$style$label_cell,
     label = pd$label(variable),
     width = theme$colwidths$descriptors,
-    name  = sprintf("%s_%i", colnames(df_text)[j], i)
+    name  = "label"
   )
 
   width  <- theme$colwidths$levels
@@ -68,7 +64,7 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
   )
 
   # all plots have same height, unify with label table
-  height        <- unit.pmax(lbl$heights, total$heights)
+  height        <- convertHeight(max(lbl$heights, total$heights), "pt")
   lbl$heights   <- height
   total$heights <- height
 

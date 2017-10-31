@@ -7,14 +7,14 @@ library(grid)
 dtable(iris, by = Species) %>%
   describe_if(
     is.numeric,
-    list(dscr_n_perc, dscr_mean_sd)
+    with = list(dscr_n_perc, dscr_mean_sd)
   ) %>%
   describe_if(
     is.factor,
-    dscr_freq
+    with = dscr_freq
   ) %>%
   describe(
-    list(dscr_histogram, dscr_boxplot),
+    with = list(dscr_histogram, dscr_boxplot),
     Sepal.Width
   ) ->
 dt

@@ -26,15 +26,11 @@ dscr_mean_sd <- TextDescriptor(
 )
 
 dscr_histogram <- PlotDescriptor(
-  ggplot(aes(x)) + geom_histogram(bins = 10) +
-    scale_x_continuous(breaks = range(data_complete)) +
-    coord_cartesian(xlim = range(data_complete), expand = FALSE),
+  ggplot(aes(variable)) + geom_histogram(bins = 10),
   function(data) "histogram"
 )
 
 dscr_boxplot <- PlotDescriptor(
-  ggplot(aes(x = 1, y = x)) + stat_boxplot() +
-    scale_y_continuous(breaks = range(data_complete), limits = range(data_complete)) +
-    coord_cartesian(ylim = range(data_complete), expand = FALSE) + coord_flip(),
+  ggplot(aes(x = 1, y = variable)) + stat_boxplot() + coord_flip(),
   function(data) "boxplot"
 )

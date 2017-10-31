@@ -13,22 +13,9 @@ TextDescriptor <- function(text, label) {
 
 
 
-as.gtable.TextDescriptor <- function(td, dscr, variable, group) {
+as.grob.TextDescriptor <- function(td, dscr, variable, group) {
 
   theme   <- dscr$theme
-
-  td<-list()
-  td$text <- function(x) {
-    if (rnorm(1) > 0) {
-      c(sprintf("%.2f, %.1f", mean(x), sd(x)), "bla")
-    } else {
-      "blubb"
-    }
-  }
-  td$label <- function(x) "label"
-
-  variable <- iris$Sepal.Length
-  group    <- iris$Species
 
   df_text <- data_frame(
     variable = variable,
@@ -38,13 +25,13 @@ as.gtable.TextDescriptor <- function(td, dscr, variable, group) {
       group
     ) %>%
     do(
-      value_label = td$text(.$variable)
+      value_label = td$text(.$variable, variable)
     ) %>%
     ungroup()
 
   df_text <- rbind(
     df_text,
-    data_frame(group = "__total__", value_label = list(td$text(variable)))
+    data_frame(group = "__total__", value_label = list(td$text(variable, variable)))
   )
 
   df_text <- rbind(

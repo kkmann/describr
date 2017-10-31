@@ -11,8 +11,8 @@ Descriptor <- function() {
 
 
 
-describe <- function(dscr, d, ...) {
-  UseMethod("describe", d)
+describe <- function(dscr, with, ...) {
+  UseMethod("describe", with)
 }
 
 
@@ -89,10 +89,15 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     stop("'dscr' must be of class describr")
   }
 
-  theme <- dscr$theme_new
+  theme    <- dscr$theme_new
+
+  group    <- dscr$df[[dscr$by]]
+  variable <- dscr$df[[varname]]
+
+  grobs    <- as.grob(d, dscr, variable, group)
 
   # start with descriptor
-  gt <- labelGrob(d, dscr$df[[varname]], theme$colwidths$descriptors)
+  gt <- grobs$`__label__`
 
   # total column
   if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
@@ -100,27 +105,19 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     # add separator spacing
     gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
 
-    totals_cell <- valueGrob( # get value for entire data set
-      d, dscr$df[[varname]], dscr$df[[varname]], theme$colwidths$levels
-    )
-    gt <- cbind(gt, totals_cell)
+    gt <- cbind(gt, grobs$`__total__`)
 
   }
 
   # levels columns
   if (is.stratified(dscr)) {
 
-    lvls <- levels(dscr$df[[dscr$by]])
-
-    for (i in 1:length(lvls)) {
+    for (lvl in levels(group)) {
 
       # add separator spacing
       gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
 
-      lvl_cell <- valueGrob( # get value for entire data set
-        d, dscr$df[[varname]][dscr$df[[dscr$by]] == lvls[i]], dscr$df[[varname]], theme$colwidths$levels
-      )
-      gt <- cbind(gt, lvl_cell)
+      gt <- cbind(gt, grobs$levels[[lvl]])
 
     }
 
@@ -155,8 +152,8 @@ addseparators <- function(gt, dscr) {
 
 
 
-as.gtable <- function(d, dscr, variable, group, ...) {
-  UseMethod("as.gtable", d)
+as.grob <- function(d, dscr, variable, group, ...) {
+  UseMethod("as.grob", d)
 }
 
 
