@@ -3,5 +3,6 @@ exportPattern("^[[:alpha:]]+")
 import(
   grid,
   gtable,
+  gridExtra,
   tidyverse
 )

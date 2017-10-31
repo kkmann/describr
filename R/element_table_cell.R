@@ -85,6 +85,59 @@ element_table_grob.element_table_cell_text <- function(e, label, width, name) {
 
 
 
+element_table_cell_plot <- function(
+  text_size,
+  plot_height       = unit(3*1.2*text_size, "pt"),
+  background_color  = NULL,
+  background_transparency = NULL,
+  frame_line_color  = NULL,
+  frame_line_size   = 1,
+  frame_line_style  = 0
+) {
+
+  structure(
+    as.list(environment()),
+    class = c("element_table_cell_plot", "element_table_cell", "element_table")
+  )
+
+}
+
+
+
+element_table_grob.element_table_cell_plot <- function(e, plot, width, name) {
+
+  cell <- gtable(
+    widths  = width,
+    heights = e$plot_height,
+    name    = name
+  )
+
+  # add actual plot as grob, keep only panel (table too small for axis!)
+  cell <- gtable_add_grob(cell,
+    ggplotGrob(plot + theme_void()) %>%
+      gtable_filter("panel"),
+    1, 1, 1, 1, name = paste0(name, "_fg")
+  )
+
+  # add backgound
+  cell <- gtable_add_grob(cell,
+    rectGrob(
+      name = paste0(name, "_bg"), gp = gpar(
+        fill  = e$background_color,
+        alpha = e$background_transparency,
+        lty   = e$frame_line_style,
+        col   = e$frame_line_color
+      )
+    ), 1, 1, 1, 1, z = -Inf
+  )
+
+  return(cell)
+
+}
+
+
+
+
 
 element_table_horizontal_separator <- function(
   text_size               = 12,

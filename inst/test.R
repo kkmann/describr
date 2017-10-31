@@ -38,4 +38,3 @@ w <- convertWidth(grobWidth(g), "in", valueOnly = TRUE)
 pdf("test.pdf", 1.1*w, h)
 grid.draw(g)
 dev.off()
-

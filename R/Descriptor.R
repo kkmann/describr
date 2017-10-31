@@ -17,7 +17,7 @@ describe <- function(dscr, d, ...) {
 
 
 
-describe.default <- function(dscr, d, ...) {
+describe.default <- function(dscr, with, ...) {
 
   tmp <- sys.call()
 
@@ -29,12 +29,12 @@ describe.default <- function(dscr, d, ...) {
 
   vars <- names(eval(as.call(nc)))
 
-  if (is(d, "Descriptor")) {
-    d <- list(d)
+  if (is(with, "Descriptor")) {
+    with <- list(with)
   }
 
   for (i in 1:length(vars)) {
-    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], d)
+    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
   }
 
   return(dscr)
@@ -43,13 +43,13 @@ describe.default <- function(dscr, d, ...) {
 
 
 
-describe_if <- function(dscr, .predicate, d, ...) {
-  UseMethod("describe_if", d)
+describe_if <- function(dscr, .predicate, with, ...) {
+  UseMethod("describe_if", with)
 }
 
 
 
-describe_if.default <- function(dscr, .predicate, d, ...) {
+describe_if.default <- function(dscr, .predicate, with, ...) {
 
   tmp <- sys.call()
 
@@ -61,12 +61,12 @@ describe_if.default <- function(dscr, .predicate, d, ...) {
 
   vars <- names(eval(as.call(nc)))
 
-  if (is(d, "Descriptor")) {
-    d <- list(d)
+  if (is(with, "Descriptor")) {
+    with <- list(with)
   }
 
   for (i in 1:length(vars)) {
-    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], d)
+    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
   }
 
   return(dscr)
@@ -139,6 +139,27 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   return(gt)
 
 }
+
+
+
+
+
+addseparators <- function(gt, dscr) {
+
+  theme <- dscr$theme_new
+
+
+
+}
+
+
+
+
+as.gtable <- function(d, dscr, variable, group, ...) {
+  UseMethod("as.gtable", d)
+}
+
+
 
 
 

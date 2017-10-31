@@ -72,7 +72,12 @@ theme_descriptor_default <- function(
     text_size        = text_size,
     text_line_height = text_line_height,
     style = list(
+      label_cells = element_table_cell_text(text_size),
       value_cells = element_table_cell_text(text_size),
+      plot_cell   = element_table_cell_plot(
+        text_size,
+        background_color = "lightgrey"
+      ),
       pvalues     = element_table_cell_text(text_size),
       separator   = element_table_horizontal_separator(text_size)
     )
