@@ -1,7 +1,7 @@
 dscr_n_perc <- TextDescriptor(
   text   = function(data_sub, data_cpl) sprintf("%i (%.1f%%)", length(data_sub), 100*length(data_sub)/length(data_cpl)),
   label  = function(data) c("n (%)"),
-  pvalue = structure(function(data, group) 0.06, label = "dummy")
+  pvalue = structure(function(data, group) 0.04, label = "dummy2")
 )
 
 dscr_freq <- TextDescriptor(

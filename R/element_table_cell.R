@@ -1,4 +1,4 @@
-element_table_grob <- function(e, content, width, ...) {
+element_table_grob <- function(e, content, width, dscr = NULL, colname = NULL, ...) {
   UseMethod("element_table_grob", e)
 }
 
@@ -31,11 +31,40 @@ element_table_cell_text <- function(
 }
 
 
+.as.text.gp <- function(e) {
+  gpar(
+    col        = e$text_color,
+    alpha      = e$text_transparency,
+    fontsize   = e$text_size,
+    fontfamily = e$text_fontfamily,
+    fontface   = e$text_fontface,
+    lineheight = e$text_line_heigth
+  )
+}
 
-element_table_grob.element_table_cell_text <- function(e, label, width, name) {
+
+
+element_table_grob.element_table_cell_text <- function(e, label, width, name,
+  dscr = NULL, colname = NULL) {
+
+  if (!is.null(dscr) & !is.null(colname)) {
+    if (!is.null(dscr$col_widths_tracker)) {
+      # determine preferred colwidth
+      vp_tmp <- viewport(gp = .as.text.gp(e))
+      pushViewport(vp_tmp)
+      preferred_width <- convertWidth(stringWidth(label) - unit(3, "mm"), "in")
+      popViewport()
+
+      dscr$col_widths_tracker(preferred_width, colname)
+    }
+  }
 
   rows <- strsplit(
-    splitString(label, availwidth = convertWidth(width - 2*e$text_padding, "in", valueOnly = TRUE)),
+    splitString(
+      label,
+      availwidth = convertWidth(width - 2*e$text_padding, "in", valueOnly = TRUE),
+      gp = .as.text.gp(e)
+    ),
     "\n"
   )[[1]]
 
@@ -63,11 +92,20 @@ element_table_grob.element_table_cell_text <- function(e, label, width, name) {
         ),
         hjust = e$text_align[[1]], vjust = e$text_align[[2]], hpadding = e$text_padding
       ),
-      i, 1, i, 1, -Inf
+      i, 1, i, 1
     )
   }
 
-  cell <- gtable_add_grob(g,
+  cell <- gtable(
+    widths  = convertHeight(width, "in"),
+    heights = convertHeight(sum(g$heights), "in")
+  )
+
+  cell <- gtable_add_grob(cell,
+    g, 1, 1, 1, 1, name = paste0(name, "_fg")
+  )
+
+  cell <- gtable_add_grob(cell,
     rectGrob(
       name = paste0(name, "_bg"), gp = gpar(
         fill  = e$background_color,
@@ -75,10 +113,29 @@ element_table_grob.element_table_cell_text <- function(e, label, width, name) {
         lty   = e$frame_line_style,
         col   = e$frame_line_color
       )
-    ), 1, 1, nrow(g), 1, z = Inf
+    ), 1, 1, 1, 1, z = -Inf, name = paste0(name, "_bg")
   )
 
   return(cell)
+
+}
+
+
+
+element_table_wish_width <- function(e, label, ...) {
+  UseMethod("element_table_wish_width", e)
+}
+
+
+element_table_wish_width.element_table_cell_text <- function(e, label) {
+
+  vp_tmp <- viewport(gp = .as.text.gp(e))
+  pushViewport(vp_tmp)
+  res <- convertWidth(stringWidth(label), "in")
+  popViewport()
+  # padding?
+  res <- convertWidth(res + 2*e$text_padding, "in")
+  return(res)
 
 }
 

@@ -98,7 +98,7 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
   grobs    <- as.grob(d, dscr, variable, group)
 
-  # start with descriptor TODO: it would be safer to add another gtable layer
+  # start with descriptor
   gt <- gtable(
     widths  = theme$colwidths$descriptors,
     heights = convertHeight(grobHeight(grobs$`__label__`), "in")
@@ -156,7 +156,9 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
       theme$body$descriptor$style$pvalues,
       label = sprintf("%.3f", p),
       width = theme$colwidths$pvalues,
-      name  = "pvalue"
+      name  = "pvalue",
+      dscr = dscr,
+      colname = "__pvalues__"
     )
     new_element$heights <- convertHeight(new_element$heights, "in")
     gt <- cbind(gt, new_element)
@@ -165,7 +167,9 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
       theme$body$descriptor$style$pval_idx,
       label = sprintf("(%i)", dscr$register_pvalue(p_label)),
       width = theme$colwidths$pvalues_idx,
-      name  = "pvalue_index"
+      name  = "pvalue_index",
+      dscr = dscr,
+      colname = "__pvalues_idx__"
     )
     new_element$heights <- convertHeight(new_element$heights, "in")
     gt <- cbind(gt, new_element)

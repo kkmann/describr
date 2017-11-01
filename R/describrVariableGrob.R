@@ -11,7 +11,7 @@ variableGrob <- function(dscr, varname) {
   )
 
   widths <- convertWidth(gtable_list[[1]]$widths, "in") # must be constant for all descriptors
-  gt    <- gtable(widths = widths)
+  gt     <- gtable(widths = widths)
 
   # add separators
   for (i in 1:length(gtable_list)) {
@@ -43,12 +43,13 @@ variableGrob <- function(dscr, varname) {
 
   gt <- gtable_add_grob(
     gt,
-    justify(element_table_grob(
-        theme$body$style$variables,
-        varname,
-        theme$colwidths$variables,
-        name = sprintf("%s_variable_label", varname)
-      ), "left", "top"
+    element_table_grob(
+      theme$body$style$variables,
+      varname,
+      theme$colwidths$variables,
+      name = sprintf("%s_variable_label", varname),
+      dscr = dscr,
+      colname = "__variables__"
     ),
     1, 1, nrow(gt), 1,
     name = sprintf("%s_variable_label", varname)

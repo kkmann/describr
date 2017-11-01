@@ -1,6 +1,7 @@
 element_table_horizontal_separator <- function(
   text_size               = 12,
   separator_height        = unit(1.2*text_size / 2, "pt"),
+  separator_line_style    = 1,
   separator_line_size     = 1,
   separator_color         = NULL,
   separator_transparency  = NULL,

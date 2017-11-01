@@ -18,7 +18,7 @@ justify <- function(x, hjust="center", vjust="center",
 # based on paul murell / rgraphics
 splitString <- function(text, availwidth = 1, gp = gpar()) {
 
-  vp_tmp <- viewport(gp = gpar())
+  vp_tmp <- viewport(gp = gp)
   pushViewport(vp_tmp)
 
   strings   <- strsplit(text, " ")[[1]]

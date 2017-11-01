@@ -22,7 +22,9 @@ headerGrob <- function(dscr) { # print the header row of the table
     theme$header$style$variables,
     theme$header$labels$variables,
     theme$colwidths$variables,
-    "header_variables_cell"
+    "header_variables_cell",
+    dscr = dscr,
+    colname = "__variables__"
   )
   gt <- add_col_header(gt, variables_cell, theme$colwidths$variables)
 
@@ -31,7 +33,9 @@ headerGrob <- function(dscr) { # print the header row of the table
     theme$header$style$descriptors,
     theme$header$labels$descriptors,
     theme$colwidths$descriptors,
-    "header_descriptors_cell"
+    "header_descriptors_cell",
+    dscr = dscr,
+    colname = "__descriptors__"
   )
   gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
   gt <- add_col_header(gt, descriptors_cell, theme$colwidths$descriptors)
@@ -43,7 +47,9 @@ headerGrob <- function(dscr) { # print the header row of the table
       theme$header$style$levels,
       theme$header$labels$total,
       theme$colwidths$levels,
-      "header_totals_cell"
+      "header_totals_cell",
+      dscr = dscr,
+      colname = "__total__"
     )
     gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
     gt <- add_col_header(gt, totals_cell, theme$colwidths$levels)
@@ -61,7 +67,9 @@ headerGrob <- function(dscr) { # print the header row of the table
         theme$header$style$levels,
         lvls[i],
         theme$colwidths$levels,
-        sprintf("header_level_%s_cell", lvls[i])
+        sprintf("header_level_%s_cell", lvls[i]),
+        dscr = dscr,
+        colname = sprintf("__level__%s", lvls[i])
       )
       gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
       gt <- add_col_header(gt, lvl_cell, theme$colwidths$levels)
@@ -77,7 +85,9 @@ headerGrob <- function(dscr) { # print the header row of the table
       theme$header$style$pvalues,
       theme$header$labels$pvalues,
       theme$colwidths$pvalues,
-      "header_pvalues_cell"
+      "header_pvalues_cell",
+      dscr = dscr,
+      colname = "__pvalues__"
     )
     gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
     gt <- add_col_header(gt, pvalues_cell, theme$colwidths$pvalues)
@@ -86,12 +96,14 @@ headerGrob <- function(dscr) { # print the header row of the table
 
   }
 
+  colnames(gt) <- create_colnames(dscr)
+
   # add seperator and grouping variable
   if (is.stratified(dscr)) {
 
     gt <- gtable_add_rows(gt, heights = theme$header$style$separator$separator_height, pos = 0)
-    colFrom <- grep("totals|level", gt$layout$name)[1]
-    colTo   <- tail(grep("totals|level", gt$layout$name), 1)
+    colFrom <- grep("__total__|__level__", colnames(gt))[2] # + 1 for seperator
+    colTo   <- tail(grep("__total__|__level__", colnames(gt)), 1)
     gt <- gtable_add_grob(gt,
       element_table_grob(theme$header$style$separator),
       1, colFrom, 1, colTo, name = "header_separator"
@@ -100,7 +112,7 @@ headerGrob <- function(dscr) { # print the header row of the table
     grouping_cell <- element_table_grob(
       theme$header$style$grouping,
       dscr$by,
-      sum(gt$widths[colFrom, colTo]),
+      convertWidth(sum(gt$widths[colFrom:colTo]), "in"),
       "header_grouping_cell"
     )
     gt <- gtable_add_rows(gt, heights = convertUnit(grobHeight(grouping_cell), "in"), pos = 0)

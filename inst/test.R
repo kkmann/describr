@@ -4,7 +4,7 @@ library(gridExtra)
 library(gtable)
 library(grid)
 
-dtable(iris, by = Species, pvalues = TRUE) %>%
+dtable(iris, by = Species, pvalue = TRUE) %>%
   describe_if(
     is.numeric,
     with = list(dscr_n_perc, dscr_mean_sd)
@@ -19,16 +19,18 @@ dtable(iris, by = Species, pvalues = TRUE) %>%
   ) ->
 dt
 
-# g <- headerGrob(dt)
-
-# g <- descriptorGrob(dummy, dt, "Sepal.Length")
-#
-# g <- variableGrob(dt, "Sepal.Length")
+# dt$theme_new$colwidths$variables <- unit(1, "in")
 
 g <- dtableGrob(dt)
 
 grid.newpage()
 grid.draw(g)
+
+g2 <- optimize_columnwidths(g)
+
+
+grid.newpage()
+grid.draw(g2)
 
 g <- justify(g, "left", "top")
 
