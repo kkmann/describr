@@ -1,7 +1,9 @@
 Descriptor <- function() {
 
   res <- structure(
-    list(),
+    list(
+      pvalue = function(variable, group) NA
+    ),
     class = c("Descriptor")
   )
 
@@ -96,16 +98,26 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
   grobs    <- as.grob(d, dscr, variable, group)
 
-  # start with descriptor
-  gt <- grobs$`__label__`
+  # start with descriptor TODO: it would be safer to add another gtable layer
+  gt <- gtable(
+    widths  = theme$colwidths$descriptors,
+    heights = convertHeight(grobHeight(grobs$`__label__`), "in")
+  )
+  gt <- gtable_add_grob(gt, grobs$`__label__`, 1, 1, name = "label")
 
   # total column
   if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
 
     # add separator spacing
-    gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
+    gt <- gtable_add_cols(gt,
+      unit.c(theme$colwidths$seperators, theme$colwidths$levels),
+      pos = -1
+    )
 
-    gt <- cbind(gt, grobs$`__total__`)
+    gt <- gtable_add_grob(gt,
+      grobs$`__total__`, 1, ncol(gt), name = "total"
+    )
+    gt$heights <- convertHeight(max(gt$heights, grobHeight(grobs$`__total__`)), "in")
 
   }
 
@@ -115,9 +127,15 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     for (lvl in levels(group)) {
 
       # add separator spacing
-      gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
+      gt <- gtable_add_cols(gt,
+        unit.c(theme$colwidths$seperators, theme$colwidths$levels),
+        pos = -1
+      )
 
-      gt <- cbind(gt, grobs$levels[[lvl]])
+      gt <- gtable_add_grob(gt,
+        grobs$levels[[lvl]], 1, ncol(gt), name = lvl
+      )
+      gt$heights <- convertHeight(max(gt$heights, grobHeight(grobs$levels[[lvl]])), "in")
 
     }
 
@@ -129,7 +147,28 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     # add separator spacing
     gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
 
-    stop("not implemented")
+    # compute pvalue (actual number)
+    p       <- d$pvalue(variable, group)
+    p_label <- attr(d$pvalue, "label")
+    dscr$register_pvalue(p_label)
+
+    new_element <- element_table_grob(
+      theme$body$descriptor$style$pvalues,
+      label = sprintf("%.3f", p),
+      width = theme$colwidths$pvalues,
+      name  = "pvalue"
+    )
+    new_element$heights <- convertHeight(new_element$heights, "in")
+    gt <- cbind(gt, new_element)
+
+    new_element <- element_table_grob(
+      theme$body$descriptor$style$pval_idx,
+      label = sprintf("(%i)", dscr$register_pvalue(p_label)),
+      width = theme$colwidths$pvalues_idx,
+      name  = "pvalue_index"
+    )
+    new_element$heights <- convertHeight(new_element$heights, "in")
+    gt <- cbind(gt, new_element)
 
   }
 
@@ -141,17 +180,6 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
 
 
-addseparators <- function(gt, dscr) {
-
-  theme <- dscr$theme_new
-
-
-
-}
-
-
-
-
 as.grob <- function(d, dscr, variable, group, ...) {
   UseMethod("as.grob", d)
 }
@@ -159,16 +187,3 @@ as.grob <- function(d, dscr, variable, group, ...) {
 
 
 
-
-
-labelGrob <- function(d, data_complete, width, ...) {
-  UseMethod("labelGrob", d)
-}
-
-
-
-
-
-valueGrob <- function(d, data, data_subset, data_complete, width, ...) {
-  UseMethod("valueGrob", d)
-}

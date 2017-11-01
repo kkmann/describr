@@ -81,6 +81,8 @@ headerGrob <- function(dscr) { # print the header row of the table
     )
     gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
     gt <- add_col_header(gt, pvalues_cell, theme$colwidths$pvalues)
+    # add column for indices
+    gt <- gtable_add_cols(gt, theme$colwidths$pvalues_idx, pos = -1)
 
   }
 

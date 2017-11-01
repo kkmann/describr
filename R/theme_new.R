@@ -7,6 +7,7 @@ theme_default_tmp <- function(
       descriptors = unit(20 * text_size / 2 / 72, "in"),
       levels      = unit(15 * text_size / 2 / 72, "in"),
       pvalues     = unit(10 * text_size / 2 / 72, "in"),
+      pvalues_idx = unit( 5 * text_size / 2 / 72, "in"),
       seperators  = unit(text_size / 72, "in")
     ),
     header = theme_header_default(text_size),
@@ -78,7 +79,8 @@ theme_descriptor_default <- function(
         text_size,
         background_color = "lightgrey"
       ),
-      pvalues     = element_table_cell_text(text_size),
+      pvalues     = element_table_cell_text(text_size, text_align = c("right", "top")),
+      pval_idx    = element_table_cell_text(text_size/1.5, text_align = c("left", "top")),
       separator   = element_table_horizontal_separator(text_size)
     )
   )

@@ -4,7 +4,7 @@ library(gridExtra)
 library(gtable)
 library(grid)
 
-dtable(iris, by = Species) %>%
+dtable(iris, by = Species, pvalues = TRUE) %>%
   describe_if(
     is.numeric,
     with = list(dscr_n_perc, dscr_mean_sd)

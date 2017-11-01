@@ -10,23 +10,26 @@ variableGrob <- function(dscr, varname) {
     function(d) descriptorGrob(d, dscr, varname)
   )
 
-  # add separators
-  i <- 1
-  widths <- gtable_list[[1]]$widths # must be constant for all descriptors
-  while (i < length(gtable_list)) {
-    gtable_list <- append(
-      gtable_list,
-      list(element_table_grob(
-        theme$body$descriptor$style$separator,
-        widths = widths
-      )),
-      i
-    )
-    i <- i + 2
-  }
+  widths <- convertWidth(gtable_list[[1]]$widths, "in") # must be constant for all descriptors
+  gt    <- gtable(widths = widths)
 
-  # bind rows
-  gt <- do.call(rbind, args = gtable_list)
+  # add separators
+  for (i in 1:length(gtable_list)) {
+
+    gt <- rbind(gt, gtable_list[[i]])
+
+    if (i < length(gtable_list)) {
+      gt <- gtable_add_rows(gt, theme$body$descriptor$style$separator$separator_height, pos = -1)
+      gt <- gtable_add_grob(gt,
+        element_table_grob(
+          theme$body$descriptor$style$separator,
+          widths = widths
+        ),
+        nrow(gt), 1, nrow(gt), ncol(gt)
+      )
+    }
+
+  }
 
   # add columns to the left for variable label and separator
   gt <- gtable_add_cols(

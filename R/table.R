@@ -20,14 +20,34 @@ dtable <- function(
     core[names(df)[i]] <- NULL
   }
 
+  register_pvalue <- function() { # counter!
+
+    pvalue_labels <- character(0)
+
+    function(label, return = FALSE) {
+      if (return) {
+        return(pvalue_labels)
+      }
+
+      if (label %in% pvalue_labels) {
+        return(which(label == pvalue_labels))
+      } else {
+        pvalue_labels <<- cbind(pvalue_labels, label)
+        return(length(pvalue_labels))
+      }
+    }
+
+  }
+
   res <- structure(
     list(
-      df        = df,
-      by        = by,
-      core      = core,
-      pvalues   = pvalues,
-      totals    = totals,
-      theme_new = theme_new
+      df              = df,
+      by              = by,
+      core            = core,
+      pvalues         = pvalues,
+      totals          = totals,
+      register_pvalue = register_pvalue(),
+      theme_new       = theme_new
     ),
     class = "describr"
   )
@@ -68,6 +88,7 @@ dtableGrob <- function(dscr,
   # variable rows and separators
   for (varname in names(dscr$core)) {
 
+    print(varname)
     gt <- rbind(gt, variableGrob(dscr, varname))
 
     if (which(varname == names(dscr$core)) < length(names(dscr$core))) { # only if not last row
