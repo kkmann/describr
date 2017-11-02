@@ -20,7 +20,8 @@ element_table_cell_text <- function(
   background_transparency = NULL,
   frame_line_color  = NULL,
   frame_line_size   = 1,
-  frame_line_style  = 0
+  frame_line_style  = 0,
+  grob_align        = c("center", "center")
 ) {
 
   structure(
@@ -52,7 +53,7 @@ element_table_grob.element_table_cell_text <- function(e, label, width, name,
       # determine preferred colwidth
       vp_tmp <- viewport(gp = .as.text.gp(e))
       pushViewport(vp_tmp)
-      preferred_width <- convertWidth(stringWidth(label) - unit(3, "mm"), "in")
+      preferred_width <- convertWidth(stringWidth(label), "in")
       popViewport()
 
       dscr$col_widths_tracker(preferred_width, colname)
@@ -114,6 +115,10 @@ element_table_grob.element_table_cell_text <- function(e, label, width, name,
         col   = e$frame_line_color
       )
     ), 1, 1, 1, 1, z = -Inf, name = paste0(name, "_bg")
+  )
+
+  cell <- justify(
+    cell, hjust = e$grob_align[[1]], vjust = e$grob_align[[2]]
   )
 
   return(cell)

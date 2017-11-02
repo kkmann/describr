@@ -103,7 +103,7 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     widths  = theme$colwidths$descriptors,
     heights = convertHeight(grobHeight(grobs$`__label__`), "in")
   )
-  gt <- gtable_add_grob(gt, grobs$`__label__`, 1, 1, name = "label")
+  gt <- gtable_add_grob(gt, grobs$`__label__`, 1, 1, name = "label", clip = "on")
 
   # total column
   if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
@@ -160,21 +160,30 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
       dscr = dscr,
       colname = "__pvalues__"
     )
-    new_element$heights <- convertHeight(new_element$heights, "in")
-    gt <- cbind(gt, new_element)
+    gt <- gtable_add_cols(gt, widths = theme$colwidths$pvalues, pos = -1)
+    gt <- gtable_add_grob(gt,
+      new_element, t = 1, ncol(gt), nrow(gt), ncol(gt)
+    )
+
 
     new_element <- element_table_grob(
       theme$body$descriptor$style$pval_idx,
-      label = sprintf("(%i)", dscr$register_pvalue(p_label)),
-      width = theme$colwidths$pvalues_idx,
-      name  = "pvalue_index",
-      dscr = dscr,
+      label   = sprintf("(%i)", dscr$register_pvalue(p_label)),
+      width   = theme$colwidths$pvalues_idx,
+      name    = "pvalue_index",
+      dscr    = dscr,
       colname = "__pvalues_idx__"
     )
-    new_element$heights <- convertHeight(new_element$heights, "in")
-    gt <- cbind(gt, new_element)
+    gt <- gtable_add_cols(gt, widths = theme$colwidths$pvalues_idx, pos = -1)
+    gt <- gtable_add_grob(gt,
+      new_element, t = 1, ncol(gt), nrow(gt), ncol(gt)
+    )
 
   }
+
+  gt <- gtable_add_grob(gt,
+    rectGrob(gp = gpar(alpha = 0.25)), 1, 1, nrow(gt), ncol(gt), z = Inf
+  )
 
   return(gt)
 

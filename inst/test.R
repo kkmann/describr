@@ -4,7 +4,7 @@ library(gridExtra)
 library(gtable)
 library(grid)
 
-dtable(iris, by = Species, pvalue = TRUE) %>%
+dtable(iris, by = Species, pvalue = TRUE, theme_new = theme_debug()) %>%
   describe_if(
     is.numeric,
     with = list(dscr_n_perc, dscr_mean_sd)
@@ -23,20 +23,19 @@ dt
 
 g <- dtableGrob(dt)
 
-grid.newpage()
-grid.draw(g)
-
 g2 <- optimize_columnwidths(g)
-
-
 grid.newpage()
 grid.draw(g2)
 
-g <- justify(g, "left", "top")
+# dt2 <- attr(g2, "describr")
+#
+# gg <- descriptorGrob(dscr_boxplot, dt2, "Sepal.Width")
+# grid.newpage()
+# grid.draw(gg)
 
-h <- convertHeight(grobHeight(g), "in", valueOnly = TRUE)
-w <- convertWidth(grobWidth(g), "in", valueOnly = TRUE)
+h <- convertHeight(grobHeight(g2), "in", valueOnly = TRUE)
+w <- convertWidth(grobWidth(g2), "in", valueOnly = TRUE)
 
 pdf("test.pdf", 1.1*w, h)
-grid.draw(g)
+grid.draw(g2)
 dev.off()

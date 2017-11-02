@@ -1,5 +1,6 @@
 theme_default_tmp <- function(
-  text_size = 12, lineheight = 1.2*text_size
+  text_size = 12,
+  lineheight = 1.2*text_size
 ) {
   list(
     colwidths = list(

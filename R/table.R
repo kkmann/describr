@@ -70,7 +70,7 @@ is.stratified.describr <- function(dscr, ...) length(dscr$by) == 1
 
 
 
-dtableGrob <- function(dscr, col_widths_tracker = NULL) {
+dtableGrob <- function(dscr, col_widths_tracker = NULL, padding = unit(0, "in")) {
 
   # create preferred-column-width tracker
   create_col_widths_tracker  <- function(dscr) { # counter!
@@ -90,10 +90,12 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL) {
       }
 
       if (colname %in% names(max_col_widths)) {
-        max_col_widths[[colname]] <<- convertWidth(max(
-          max_col_widths[[colname]],
-          convertWidth(width, "in")
-        ), "in")
+        max_col_widths[[colname]] <<- convertWidth(
+          max(
+            max_col_widths[[colname]],
+            convertWidth(width + padding, "in")
+          ),
+        "in")
         return(NULL)
       } else {
         stop("colname unknown")
@@ -117,7 +119,6 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL) {
   # variable rows and separators
   for (varname in names(dscr$core)) {
 
-    print(varname)
     gt <- rbind(gt, variableGrob(dscr, varname))
 
     if (which(varname == names(dscr$core)) < length(names(dscr$core))) { # only if not last row
@@ -129,12 +130,10 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL) {
 
   }
 
-  # bottom separator and TODO: bottom grob
-  gt <- rbind(
-    gt,
-    element_table_grob(theme$bottom$style$separator, widths = gt$widths)
-  )
-
+  # footer
+  footer <- bottomGrob(dscr, gt)
+  gt <- gtable_add_rows(gt, heights = convertUnit(grobHeight(footer), "in"))
+  gt <- gtable_add_grob(gt, footer, nrow(gt), 1, nrow(gt), ncol(gt), name = "footer")
 
   attr(gt, "describr")  <- dscr
   class(gt) <- c("describr_gtable", class(gt))
@@ -171,7 +170,7 @@ optimize_columnwidths <- function(dscr_gtable) {
     }
   }
 
-  dscr$theme_new$colwidths$pvalues_idx <- max_level_width
+  dscr$theme_new$colwidths$levels <- max_level_width
 
   return(dtableGrob(dscr))
 
