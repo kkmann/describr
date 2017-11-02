@@ -70,8 +70,8 @@ as.grob.TextDescriptor <- function(td, dscr, variable, group) {
       style   <- theme$body$descriptor$style$value_cell
       colname <- sprintf("__level__%s", names(df_text)[j])
       if (colnames(df_text)[j] == "__descriptors__") {
-        width <- theme$colwidths$descriptors
-        style <- theme$body$descriptor$style$label_cell
+        width   <- theme$colwidths$descriptors
+        style   <- theme$body$descriptor$style$label_cell
         colname <- "__descriptors__"
       }
       if (colnames(df_text)[j] == "__total__") {
@@ -82,10 +82,10 @@ as.grob.TextDescriptor <- function(td, dscr, variable, group) {
         gt_row,
         element_table_grob(
           style,
-          label = df_text[[j]][i],
-          width = width,
-          name  = sprintf("%s_%i", colnames(df_text)[j], i),
-          dscr = dscr,
+          label   = df_text[[j]][i],
+          width   = width,
+          name    = sprintf("%s_%i", colnames(df_text)[j], i),
+          dscr    = dscr,
           colname = colname
         )
       )

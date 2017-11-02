@@ -45,8 +45,10 @@ element_table_cell_text <- function(
 
 
 
-element_table_grob.element_table_cell_text <- function(e, label, width, name,
-  dscr = NULL, colname = NULL) {
+element_table_grob.element_table_cell_text <- function(
+  e, label, width, name,
+  dscr = NULL, colname = NULL
+) {
 
   if (!is.null(dscr) & !is.null(colname)) {
     if (!is.null(dscr$col_widths_tracker)) {

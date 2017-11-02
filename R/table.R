@@ -70,7 +70,7 @@ is.stratified.describr <- function(dscr, ...) length(dscr$by) == 1
 
 
 
-dtableGrob <- function(dscr, col_widths_tracker = NULL, padding = unit(0, "in")) {
+dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.1) {
 
   # create preferred-column-width tracker
   create_col_widths_tracker  <- function(dscr) { # counter!
@@ -93,7 +93,7 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL, padding = unit(0, "in"))
         max_col_widths[[colname]] <<- convertWidth(
           max(
             max_col_widths[[colname]],
-            convertWidth(width + padding, "in")
+            convertWidth(width * padding_fct, "in")
           ),
         "in")
         return(NULL)

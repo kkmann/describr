@@ -24,7 +24,9 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
     theme$body$descriptor$style$label_cell,
     label = pd$label(variable),
     width = theme$colwidths$descriptors,
-    name  = "label"
+    name  = "label",
+    dscr = dscr,
+    colname = "__descriptors__"
   )
 
   width  <- theme$colwidths$levels
@@ -69,9 +71,9 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
   )
 
   # all plots have same height, unify with label table
-  height        <- convertHeight(max(lbl$heights, total$heights), "pt")
-  lbl$heights   <- height
-  total$heights <- height
+  #height        <- convertHeight(max(lbl$heights, total$heights), "pt")
+  #lbl$heights   <- height
+  #total$heights <- height
 
   res <- list(
     `__label__` = lbl,
@@ -88,7 +90,7 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
         name  = level
       )
     )
-    new_element[[1]]$heights <- height
+    #new_element[[1]]$heights <- height
     names(new_element)       <- level
     res$levels  <- c(res$levels, new_element)
   }

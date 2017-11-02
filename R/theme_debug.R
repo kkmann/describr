@@ -9,7 +9,7 @@ theme_debug <- function(
       levels      = unit(15 * text_size / 2 / 72, "in"),
       pvalues     = unit(10 * text_size / 2 / 72, "in"),
       pvalues_idx = unit( 5 * text_size / 2 / 72, "in"),
-      seperators  = unit(text_size / 72, "in")
+      seperators  = unit(text_size / 72 * 2/3, "in")
     ),
     header = theme_header_debug(text_size),
     body   = theme_body_debug(text_size),
@@ -23,6 +23,7 @@ theme_header_debug <- function(
   text_default = element_table_cell_text(
     text_size,
     text_fontface = "bold",
+    grob_align = c("center", "top"),
     frame_line_style = 2,
     frame_line_color = "red",
     background_transparency = .5

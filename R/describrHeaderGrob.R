@@ -84,15 +84,19 @@ headerGrob <- function(dscr) { # print the header row of the table
     pvalues_cell <- element_table_grob(
       theme$header$style$pvalues,
       theme$header$labels$pvalues,
-      theme$colwidths$pvalues,
+      convertUnit(theme$colwidths$pvalues + theme$colwidths$pvalues_idx, "in"),
       "header_pvalues_cell",
       dscr = dscr,
       colname = "__pvalues__"
     )
     gt <- add_col_header(gt, zeroGrob(), theme$colwidths$seperators)
-    gt <- add_col_header(gt, pvalues_cell, theme$colwidths$pvalues)
-    # add column for indices
-    gt <- gtable_add_cols(gt, theme$colwidths$pvalues_idx, pos = -1)
+    # manual as spanning two columns!
+    gt <- gtable_add_cols(gt,
+      widths  = unit.c(theme$colwidths$pvalues, theme$colwidths$pvalues_idx),
+      pos = -1
+    )
+    gt$heights <- convertUnit(max(gt$heights, grobHeight(pvalues_cell)), "in")
+    gt <- gtable_add_grob(gt, pvalues_cell, 1, ncol(gt) - 1, 1, ncol(gt), name = "pvalue")
 
   }
 
