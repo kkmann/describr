@@ -4,17 +4,24 @@ library(gridExtra)
 library(gtable)
 library(grid)
 
-dtable(iris, by = Species, pvalue = TRUE, theme_new = theme_debug()) %>%
+iris %>%
+  mutate(
+    ichbinsvenjasdaemlicherzufallsfaktor = factor(
+      sample(1:4, nrow(iris), replace = TRUE),
+      labels = c("hi", "ho", "xXx", "ich bin kein level")
+    )
+  ) %>%
+dtable(by = Species, pvalue = TRUE, theme_new = theme_debug()) %>%
   describe_if(
     is.numeric,
-    with = list(dscr_n_perc, dscr_mean_sd)
+    with = list(dscr_mean_sd, dscr_median_iqr, dscr_range)
   ) %>%
   describe_if(
     is.factor,
     with = dscr_freq
   ) %>%
   describe(
-    with = list(dscr_histogram, dscr_boxplot),
+    with = list(dscr_histogram, dscr_boxplot, dscr_violin, dscr_qqnorm),
     Sepal.Width
   ) ->
 dt
@@ -32,6 +39,37 @@ grid.draw(g2)
 # gg <- descriptorGrob(dscr_boxplot, dt2, "Sepal.Width")
 # grid.newpage()
 # grid.draw(gg)
+
+h <- convertHeight(grobHeight(g2), "in", valueOnly = TRUE)
+w <- convertWidth(grobWidth(g2), "in", valueOnly = TRUE)
+
+pdf("test.pdf", 1.1*w, h)
+grid.draw(g2)
+dev.off()
+
+starwars %>%
+  select(-name, -starships, -films, -vehicles) %>%
+  mutate_if(is.character, funs(factor)) %>%
+  filter(!is.na(gender)) %>%
+  dtable(by = gender, pvalue = TRUE, theme_new = theme_debug()) %>%
+  describe_if(
+    is.numeric,
+    with = list(dscr_mean_sd, dscr_mean_sd)
+  ) %>%
+  describe_if(
+    is.factor,
+    with = dscr_freq
+  ) %>%
+  describe(
+    with = list(dscr_histogram, dscr_boxplot),
+    mass
+  ) ->
+  dt
+
+g  <- dtableGrob(dt)
+g2 <- optimize_columnwidths(g)
+# grid.newpage()
+# grid.draw(g2)
 
 h <- convertHeight(grobHeight(g2), "in", valueOnly = TRUE)
 w <- convertWidth(grobWidth(g2), "in", valueOnly = TRUE)

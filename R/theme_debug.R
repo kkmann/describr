@@ -114,7 +114,13 @@ theme_descriptor_debug <- function(
         frame_line_color = "red",
         background_transparency = .5
       ),
-      value_cells = text_default,
+      value_cells = element_table_cell_text(
+        text_size,
+        text_align = c("right", "center"),
+        frame_line_style = 2,
+        frame_line_color = "red",
+        background_transparency = .5
+      ),
       plot_cell   = element_table_cell_plot(
         text_size,
         background_color = "grey",

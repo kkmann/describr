@@ -71,6 +71,8 @@ describe_if.default <- function(dscr, .predicate, with, ...) {
     dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
   }
 
+  dscr$core[[dscr$by]] <- NULL # always exclude grouping variable!
+
   return(dscr)
 
 }

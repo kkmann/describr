@@ -105,6 +105,10 @@ headerGrob <- function(dscr) { # print the header row of the table
   # add seperator and grouping variable
   if (is.stratified(dscr)) {
 
+    # add n descriptor
+
+    gt <- rbind(gt, variableGrob(dscr, dscr$by))
+
     gt <- gtable_add_rows(gt, heights = theme$header$style$separator$separator_height, pos = 0)
     colFrom <- grep("__total__|__level__", colnames(gt))[2] # + 1 for seperator
     colTo   <- tail(grep("__total__|__level__", colnames(gt)), 1)

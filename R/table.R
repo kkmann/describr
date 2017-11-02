@@ -44,6 +44,7 @@ dtable <- function(
       df              = df,
       by              = by,
       core            = core,
+      group_descriptors = list(dscr_n_perc),
       pvalues         = pvalues,
       totals          = totals,
       register_pvalue = register_pvalue(),
@@ -98,7 +99,7 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.1) {
         "in")
         return(NULL)
       } else {
-        stop("colname unknown")
+        stop(sprintf("colname '%s' unknown", colname))
       }
     }
 
