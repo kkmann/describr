@@ -3,7 +3,8 @@ dtable <- function(
   by = NULL,
   theme_new = theme_default_tmp(),
   pvalues = FALSE,
-  totals = TRUE
+  totals = TRUE,
+  maxwidth = unit(8.27 - 2.5, "in")
 ) {
 
   by     = as.character(substitute(by))
@@ -48,7 +49,8 @@ dtable <- function(
       pvalues         = pvalues,
       totals          = totals,
       register_pvalue = register_pvalue(),
-      theme_new       = theme_new
+      theme_new       = theme_new,
+      maxwidth        = maxwidth
     ),
     class = "describr"
   )
@@ -150,28 +152,97 @@ optimize_columnwidths <- function(dscr_gtable) {
 
   dscr <- attr(g, "describr")
 
+  col_names <- colnames(dscr_gtable)
+
   required_colwidths <- dscr$col_widths_tracker(0, 0, TRUE)
 
-  dscr$theme_new$colwidths$variables <- required_colwidths$`__variables__`
+  if (convertUnit(sum(dscr_gtable$widths), "in") < dscr$maxwidth) {
 
-  dscr$theme_new$colwidths$descriptors <- required_colwidths$`__descriptors__`
+    dscr$theme_new$colwidths$variables <- required_colwidths$`__variables__`
 
-  dscr$theme_new$colwidths$pvalues <- required_colwidths$`__pvalues__`
+    dscr$theme_new$colwidths$descriptors <- required_colwidths$`__descriptors__`
 
-  dscr$theme_new$colwidths$pvalues_idx <- required_colwidths$`__pvalues_idx__`
+    dscr$theme_new$colwidths$pvalues <- required_colwidths$`__pvalues__`
 
-  # determine maximal level width
-  max_level_width <- unit(0, "in")
-  for (colname in names(required_colwidths)) {
-    if (length(grep("__level__", colname)) == 1 | colname == "__total__") {
-      max_level_width <- convertWidth(
-        max(required_colwidths[[colname]], max_level_width),
-        "in"
-      )
+    dscr$theme_new$colwidths$pvalues_idx <- required_colwidths$`__pvalues_idx__`
+
+    # determine maximal level width
+    max_level_width <- unit(0, "in")
+    for (colname in names(required_colwidths)) {
+      if (length(grep("__level__", colname)) == 1 | colname == "__total__") {
+        max_level_width <- convertWidth(
+          max(required_colwidths[[colname]], max_level_width),
+          "in"
+        )
+      }
     }
+
+    dscr$theme_new$colwidths$levels <- max_level_width
+
+  } else {
+
+    # need to find a compromise
+
+    required_colwidths_in <- convertUnit(required_colwidths, "in", valueOnly = TRUE)
+
+    l1_penalty_weights <- rep(1, length(col_names))
+    l0_penalty_weights <- rep(1, length(col_names))
+    # need to exclude seperators from l1 penalty
+    for (i in 1:length(col_names)) {
+      if (length(grep("__separator", col_names[i])) == 1) {
+        l0_penalty_weights <- 0
+      }
+    }
+
+    maxwidth <- convertUnit(dscr$maxwidths, "in", valueOnly = TRUE)
+
+    lambda   <- 0.5
+
+    MIPModel() %>%
+      add_variable(
+        col_widths[i], i = 1:length(col_names),
+        lb = 0,
+        ub = maxwidth
+      ) %>%
+      add_constraint(
+        col_widths[i] <= required_colwidths_in[i],
+        i = 1:length(col_names)
+      ) %>%
+      add_constraint(
+        sum_expr(
+          col_widths[i],
+          i = 1:length(col_names)
+        ) <= maxwidths
+      ) %>%
+      add_variable(
+        is_too_small[i],
+        i = 1:length(col_names),
+        type = "binary"
+      ) %>%
+      add_constraint(
+        col_widths[i] - required_colwidths_in[i] +
+          2 * max(required_colwidths_in) * is_too_small[i] >= 0,
+        i = 1:length(col_names)
+        # this constraint ensures that is_too_small[i] == 1 if the new_colwidth
+        # is smaller than the required one
+      ) %>%
+      add_objective(
+        sum_expr(
+          l1_penalty_weights[i] * (col_widths[i] - required_colwidths_in[i]),
+          i = 1:length(col_names)
+        ) +
+        sum_expr(
+          lambda * l0_penalty_weights[i] * is_too_small[i],
+          i = 1:length(col_names)
+        )
+      ) %>%
+      solve_model(with_ROI(solver = "glpk")) %>%
+      get_solution(col_widths) ->
+      tmp
   }
 
-  dscr$theme_new$colwidths$levels <- max_level_width
+
+
 
   return(dtableGrob(dscr))
 
