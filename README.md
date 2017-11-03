@@ -8,7 +8,7 @@ Make sure that the `devtools` package is installed and run
 
     devtools::install_github('kkmann/describr')
     
-to install the newest release. 
+to install the most recent version (might be unstable). 
 
 ## Intro
 
