@@ -157,6 +157,8 @@ optimize_columnwidths <- function(dscr_gtable) {
 
   maxwidth <- convertUnit(dscr$maxwidth, "in", valueOnly = TRUE)
 
+  col_names <- colnames(dscr_gtable)
+
   required_colwidths <- dscr$col_widths_tracker(0, 0, TRUE)
 
   if (convertUnit(sum(dscr_gtable$widths), "in", valueOnly = TRUE) < maxwidth) {
@@ -178,6 +180,7 @@ optimize_columnwidths <- function(dscr_gtable) {
           "in"
         )
       }
+
     }
 
     dscr$theme_new$colwidths$levels <- max_level_width
