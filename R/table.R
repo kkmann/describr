@@ -160,8 +160,12 @@ optimize_columnwidths <- function(dscr_gtable) {
   col_names <- colnames(dscr_gtable)
 
   required_colwidths <- dscr$col_widths_tracker(0, 0, TRUE)
+  required_colwidths_in <- sapply(
+    required_colwidths,
+    function(x) convertUnit(x, "in", valueOnly = TRUE)
+  )
 
-  if (convertUnit(sum(dscr_gtable$widths), "in", valueOnly = TRUE) < maxwidth) {
+  if (sum(required_colwidths_in) <= maxwidth) {
 
     dscr$theme_new$colwidths$variables <- required_colwidths$`__variables__`
 
@@ -189,11 +193,6 @@ optimize_columnwidths <- function(dscr_gtable) {
 
     # need to find a compromise
 
-    required_colwidths_in <- sapply(
-      required_colwidths,
-      function(x) convertUnit(x, "in", valueOnly = TRUE)
-    )
-
     l1_penalty_weights <- rep(1, length(col_names))
     l0_penalty_weights <- rep(1, length(col_names))
     # need to exclude seperators from l1 penalty
@@ -204,6 +203,11 @@ optimize_columnwidths <- function(dscr_gtable) {
         length(grep("__pvalues", col_names[i])) == 1
       ) {
         l1_penalty_weights[i] <- 100
+      }
+      if (
+        length(grep("__descriptors__", col_names[i])) == 1
+      ) {
+        l1_penalty_weights[i] <- 5
       }
       if (length(grep("__separator", col_names[i])) == 1) {
         l0_penalty_weights[i] <- 0

@@ -84,7 +84,7 @@ theme_body_debug <- function(
         separator_line_style = 0
       )
     ),
-    descriptor = theme_descriptor_debug()
+    descriptor = theme_descriptor_debug(text_size)
   )
 }
 

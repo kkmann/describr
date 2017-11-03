@@ -11,7 +11,7 @@ iris %>%
       labels = c("hi", "ho", "xXx", "ich bin kein level")
     )
   ) %>%
-dtable(by = Species, pvalue = TRUE, theme_new = theme_debug(10)) %>%
+dtable(by = Species, pvalue = TRUE, theme_new = theme_debug(12)) %>%
   describe_if(
     is.numeric,
     with = list(dscr_mean_sd, dscr_median_iqr, dscr_range)
