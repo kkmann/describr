@@ -4,5 +4,9 @@ import(
   grid,
   gtable,
   gridExtra,
-  tidyverse
+  tidyverse,
+  ompr,
+  ompr.roi,
+  ROI,
+  ROI.plugin.glpk
 )

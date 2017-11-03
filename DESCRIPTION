@@ -9,7 +9,7 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: tidyverse, gtable, grid, gridExtra, kSamples
+Imports: tidyverse, gtable, grid, gridExtra, kSamples, ompr, ompr.roi, ROI.plugin.glpk, ROI
 Suggests: testthat
 Collate: 
   'util.R'
