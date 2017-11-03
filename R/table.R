@@ -119,11 +119,15 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.1) {
     gt,
     element_table_grob(theme$header$style$separator_bottom, widths = gt$widths)
   )
+  rownames(gt) <- sapply(1:nrow(gt), function(i) sprintf("__header__%i", i))
 
   # variable rows and separators
   for (varname in names(dscr$core)) {
 
-    gt <- rbind(gt, variableGrob(dscr, varname))
+    vargrob <- variableGrob(dscr, varname)
+    # create rownames
+    rownames(vargrob) <- sapply(1:nrow(vargrob), function(i) sprintf("__variable__%s_%i", varname, i))
+    gt <- rbind(gt, vargrob)
 
     if (which(varname == names(dscr$core)) < length(names(dscr$core))) { # only if not last row
       gt <- rbind(
@@ -131,11 +135,13 @@ dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.1) {
         element_table_grob(theme$body$style$separator_variables, widths = gt$widths)
       )
     }
+    rownames(gt) <- c(rownames(gt), sprintf("__variable__%s_separator", varname))
 
   }
 
   # footer
   footer <- bottomGrob(dscr, gt)
+  rownames(footer) <- sapply(1:nrow(footer), function(i) sprintf("__footer__%i", i))
   gt <- gtable_add_rows(gt, heights = convertUnit(grobHeight(footer), "in"))
   gt <- gtable_add_grob(gt, footer, nrow(gt), 1, nrow(gt), ncol(gt), name = "footer")
 
@@ -221,7 +227,7 @@ optimize_columnwidths <- function(dscr_gtable) {
       separator_inds
     )
 
-    lambda   <- 0.1
+    lambda   <- 0.25
 
     MIPModel() %>%
       add_variable(
@@ -308,6 +314,55 @@ optimize_columnwidths <- function(dscr_gtable) {
 
 
 
+split_pages <- function(dscr_gtable, maxheight = unit(11.69 - 3, "in")) {
+
+  # very crude
+
+  dscr <- attr(dscr_gtable, "describr")
+
+  pages          <- list()
+
+  heights_in     <- convertUnit(dscr_gtable$heights, "in", valueOnly = TRUE)
+
+  gt_tmp         <- dscr_gtable[grep("__header__", rownames(dscr_gtable)), ]
+  current_height <- sum(heights_in[grep("__header__", rownames(dscr_gtable))])
+
+  varnames       <- names(dscr$core)
+
+  for (varname in varnames) {
+
+    var_inds <- grep(sprintf("__variable__%s_", varname), rownames(dscr_gtable))
+
+    new_height <- current_height + sum(heights_in[var_inds])
+
+    if (new_height <= convertUnit(maxheight, "in", valueOnly = TRUE)) {
+
+      gt_tmp <- rbind(gt_tmp, dscr_gtable[var_inds, ])
+
+      current_height <- new_height
+
+    } else {
+
+      pages <- c(pages, list(gt_tmp))
+
+      gt_tmp         <- dscr_gtable[grep("__header__", rownames(dscr_gtable)), ]
+
+      gt_tmp         <- rbind(gt_tmp, dscr_gtable[var_inds, ])
+
+      current_height <- sum(heights_in[grep("__header__", rownames(dscr_gtable))]) + sum(heights_in[var_inds])
+
+    }
+
+  }
+
+  pages <- c(pages, list(gt_tmp))
+
+  return(pages)
+
+}
+
+
+
 
 
 create_colnames <- function(dscr) {
@@ -351,3 +406,4 @@ create_colnames <- function(dscr) {
   return(colnames)
 
 }
+
