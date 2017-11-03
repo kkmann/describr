@@ -4,7 +4,7 @@ dtable <- function(
   theme_new = theme_default_tmp(),
   pvalues = FALSE,
   totals = TRUE,
-  maxwidth = 1.5*unit(8.27 - 2.5, "in") # 1.5 times maximal actual plotting
+  maxwidth = unit(8.27 - 2.5, "in") # 1.5 times maximal actual plotting
    # width on standard portrait a4: larger would be unrealistic scaling
 ) {
 
@@ -74,7 +74,7 @@ is.stratified.describr <- function(dscr, ...) length(dscr$by) == 1
 
 
 
-dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.1) {
+dtableGrob <- function(dscr, col_widths_tracker = NULL, padding_fct = 1.05) {
 
   # create preferred-column-width tracker
   create_col_widths_tracker  <- function(dscr) { # counter!
@@ -208,7 +208,7 @@ optimize_columnwidths <- function(dscr_gtable) {
         length(grep("__total__", col_names[i])) == 1 |
         length(grep("__pvalues", col_names[i])) == 1
       ) {
-        l1_penalty_weights[i] <- 100
+        l1_penalty_weights[i] <- 1000
       }
       if (
         length(grep("__descriptors__", col_names[i])) == 1
@@ -235,10 +235,10 @@ optimize_columnwidths <- function(dscr_gtable) {
         lb = 0,
         ub = maxwidth
       ) %>%
-      add_constraint(
-        col_widths[i] <= required_colwidths_in[i],
-        i = 1:length(col_names)
-      ) %>%
+      # add_constraint(
+      #   col_widths[i] <= required_colwidths_in[i],
+      #   i = 1:length(col_names)
+      # ) %>%
       add_constraint(
         sum_expr(
           col_widths[i],
@@ -259,7 +259,7 @@ optimize_columnwidths <- function(dscr_gtable) {
           }
         }
         for (i in 1:length(separator_inds)) {
-          m <- add_constraint(m, col_widths[separator_inds[i]] >= required_colwidths_in[separator_inds[i]] / 10)
+          m <- add_constraint(m, col_widths[separator_inds[i]] >= required_colwidths_in[separator_inds[i]] / 5)
         }
         if (length(level_inds) > 1) {
           for (i in 2:length(level_inds)) {
@@ -306,9 +306,18 @@ optimize_columnwidths <- function(dscr_gtable) {
 
     dscr$theme_new$colwidths$levels <- max_level_width
 
+    # determine minimal separator width
+    min_sep_width <- convertUnit(min(col_widths_opt[separator_inds]), "in")
+
+    dscr$theme_new$colwidths$seperators <- min_sep_width
+
   }
 
-  return(dtableGrob(dscr))
+  adjusted_dt <- dtableGrob(dscr)
+
+  adjusted_dt$widths %>% as.numeric() - col_widths_opt %>% as.numeric()
+
+  return(adjusted_dt)
 
 }
 

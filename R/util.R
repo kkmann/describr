@@ -27,7 +27,7 @@ splitString <- function(text, availwidth = 1, gp = gpar()) {
   gapwidth  <- convertWidth(stringWidth(" "), "in", valueOnly = TRUE)
 
   i <- 1
-  while (i <= length(strings) & i < 10) {
+  while (i <= length(strings)) {
 
     width <- convertWidth(stringWidth(strings[i]), "in", valueOnly = TRUE)
 
@@ -44,7 +44,7 @@ splitString <- function(text, availwidth = 1, gp = gpar()) {
         strings <- c(strings[1:(i - 1)], "", strings[i], strings[(i + 1):length(strings)])
       }
       j <- 0
-      while (j <= nchar(strings[i + 1]) - 1 & j < 10 & convertWidth(stringWidth(paste0(substring(strings[i + 1], 1, j + 1), "-")), "in", valueOnly = TRUE) < availwidth ) {
+      while (j <= nchar(strings[i + 1]) - 1 & convertWidth(stringWidth(paste0(substring(strings[i + 1], 1, j + 1), "-")), "in", valueOnly = TRUE) < availwidth ) {
         j <- j + 1
       }
       strings[i] <- paste0(substring(strings[i + 1], 1, j), "-")

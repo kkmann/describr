@@ -34,12 +34,12 @@ element_table_cell_text <- function(
 
 .as.text.gp <- function(e) {
   gpar(
-    col        = e$text_color,
     alpha      = e$text_transparency,
-    fontsize   = e$text_size,
+    col        = e$text_color,
     fontfamily = e$text_fontfamily,
+    fontsize   = e$text_size,
     fontface   = e$text_fontface,
-    lineheight = e$text_line_heigth
+    lineheight = e$text_line_height / e$text_size
   )
 }
 

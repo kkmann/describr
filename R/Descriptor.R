@@ -183,9 +183,9 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
   }
 
-  gt <- gtable_add_grob(gt,
-    rectGrob(gp = gpar(alpha = 0.25)), 1, 1, nrow(gt), ncol(gt), z = Inf
-  )
+  # gt <- gtable_add_grob(gt,
+  #   rectGrob(gp = gpar(alpha = 0.25)), 1, 1, nrow(gt), ncol(gt), z = Inf
+  # )
 
   return(gt)
 

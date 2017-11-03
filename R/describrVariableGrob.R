@@ -2,7 +2,6 @@ variableGrob <- function(dscr, varname) {
 
   theme <- dscr$theme_new
 
-
   if (dscr$by == varname) {
     descriptor_list <- dscr$group_descriptors
   } else {

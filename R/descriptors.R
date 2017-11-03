@@ -103,7 +103,7 @@ dscr_range <- TextDescriptor(
     function(data, group) {
       NA
     },
-    label = "__not_a_test__"
+    label = "no test for equality of ranges conducted"
   )
 
 )
