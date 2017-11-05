@@ -12,6 +12,39 @@ Descriptor <- function() {
 }
 
 
+
+get_label <- function(d, variable_all, ...) {
+  UseMethod("get_label", d)
+}
+
+get_description <- function(d, variable_group, variable_all, ...) {
+  UseMethod("get_description", d)
+}
+
+get_pvalues <- function(d, variable_all, group, ...) {
+  UseMethod("get_pvalues", d)
+}
+
+get_pvalues.default <- function(d, variable_all, group) {
+
+  df <- data_frame(
+    variable = variable_all,
+    group    = group
+  )
+
+  pvalues <- list()
+
+  for (i in 1:length(d$pvalues)) {
+    pval <- d$pvalues[[i]]
+    lbl <- label(pval, df, "variable", "group")
+    pvalues[[lbl]] <- compute_pvalue(pval, df, "variable", "group")
+  }
+
+  return(pvalues)
+
+}
+
+
 #' Specify descriptors for a table
 #'
 #' \code{describe} can be used to specify \emph{which} variables should be
@@ -125,7 +158,7 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   group    <- dscr$df[[dscr$by]]
   variable <- dscr$df[[varname]]
 
-  grobs    <- as.grob(d, dscr, variable, group)
+  grobs    <- as_grob_list(d, dscr, varname)
 
   # start with descriptor
   gt <- gtable(
@@ -176,43 +209,45 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
     # add separator spacing
     gt <- gtable_add_cols(gt, theme$colwidths$seperators, pos = -1)
 
-    # compute pvalue (actual number)
-    p       <- d$pvalue(variable, group)
-    p_label <- attr(d$pvalue, "label")
-    dscr$register_pvalue(p_label)
+    # compute pvalues
+    pvals <- get_pvalues(d, variable, group)
 
-    new_element <- element_table_grob(
-      theme$body$descriptor$style$pvalues,
-      label = sprintf("%.3f", p),
-      width = theme$colwidths$pvalues,
-      name  = "pvalue",
-      dscr = dscr,
-      colname = "__pvalues__"
-    )
-    gt <- gtable_add_cols(gt, widths = theme$colwidths$pvalues, pos = -1)
-    gt <- gtable_add_grob(gt,
-      new_element, t = 1, ncol(gt), nrow(gt), ncol(gt)
+    gt_pvalues <- gtable(
+      heights = rep(unit(0, "in"), length(pvals)),
+      widths = unit.c(theme$colwidths$pvalues, theme$colwidths$pvalues_idx)
     )
 
+    for (i in 1:length(pvals)) {
 
-    new_element <- element_table_grob(
-      theme$body$descriptor$style$pval_idx,
-      label   = sprintf("(%i)", dscr$register_pvalue(p_label)),
-      width   = theme$colwidths$pvalues_idx,
-      name    = "pvalue_index",
-      dscr    = dscr,
-      colname = "__pvalues_idx__"
-    )
-    gt <- gtable_add_cols(gt, widths = theme$colwidths$pvalues_idx, pos = -1)
-    gt <- gtable_add_grob(gt,
-      new_element, t = 1, ncol(gt), nrow(gt), ncol(gt)
-    )
+      dscr$register_pvalue(names(pvals)[i])
+
+      pval_element <- element_table_grob(
+        theme$body$descriptor$style$pvalues,
+        label = sprintf("%.3f", pvals[[i]]),
+        width = theme$colwidths$pvalues,
+        name  = "pvalue",
+        dscr = dscr,
+        colname = "__pvalues__"
+      )
+      gt_pvalues <- gtable_add_grob(gt_pvalues, pval_element, i, 1, name = "pvalue")
+      gt_pvalues$heights[i] <- max(gt_pvalues$heights[i], grobHeight(pval_element)) %>% to_inches()
+
+      idx_element <- element_table_grob(
+        theme$body$descriptor$style$pval_idx,
+        label   = sprintf("(%i)", dscr$register_pvalue(names(pvals)[i])),
+        width   = theme$colwidths$pvalues_idx,
+        name    = "pvalue_index",
+        dscr    = dscr,
+        colname = "__pvalues_idx__"
+      )
+      gt_pvalues <- gtable_add_grob(gt_pvalues, idx_element, i, 2, name = "pvalue_idx")
+      gt_pvalues$heights[i] <- max(gt_pvalues$heights[i], grobHeight(pval_element)) %>% to_inches()
+
+    }
+
+    gt <- cbind(gt, gt_pvalues)
 
   }
-
-  # gt <- gtable_add_grob(gt,
-  #   rectGrob(gp = gpar(alpha = 0.25)), 1, 1, nrow(gt), ncol(gt), z = Inf
-  # )
 
   return(gt)
 

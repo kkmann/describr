@@ -1,6 +1,5 @@
 create_colnames <- function(dscr) {
 
-  theme <- dscr$theme_new
 
   colnames <- "__variables__"
 
@@ -221,3 +220,29 @@ cols <- function(dscr) {
 
 }
 
+
+
+
+# stop if not df[[varname]] a factor with at least two levels?
+.is_proper_group <- function(df, varname) {
+
+  if (!(varname %in% names(df))) {
+    stop("varname not found in df")
+  }
+
+  var <- df[[varname]]
+
+  if (!is.factor(var)) {
+    stop("must be a factor")
+  }
+
+  if (length(levels(var)) < 2) {
+    stop("must have at least two levels")
+  }
+
+}
+
+
+to_inches <- function(u) {
+  convertUnit(u, "in")
+}

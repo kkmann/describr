@@ -1,4 +1,4 @@
-TextDescriptor <- function(text, label, pvalue) {
+dscr_text_descriptor <- function(text, label, pvalue) {
 
   res <- structure(
     list(
@@ -6,7 +6,7 @@ TextDescriptor <- function(text, label, pvalue) {
       label  = label,
       pvalue = pvalue
     ),
-    class = c("TextDescriptor", "Descriptor")
+    class = c("dscr_text_descriptor", "dscr_descriptor")
   )
 
   return(res)
@@ -17,37 +17,30 @@ TextDescriptor <- function(text, label, pvalue) {
 
 
 
+as_data_frame.dscr_text_descriptor <- function(td, dscr, varname, ...) {
 
-as_grob_list.TextDescriptor <- function(td, dscr, varname) {
-
-  as.grob(td, dscr, dscr$df[[varname]], dscr$df[[dscr$by]])
-
-}
-
-
-as_data_frame.TextDescriptor <- function(td, dscr, variable, group, ...) {
-
-  # TODO: use correct colnames right away
+  variable <- dscr$df[[varname]]
+  group    <- dscr$df[[dscr$by]]
 
   df_text <- data_frame( # start with labels
     group       = "__descriptors__",
-    value_label = get_label(td, variable) %>% list()
+    value_label = label(td, variable) %>% list()
   ) %>% rbind(data_frame(
     group       = "__total__",
-    value_label = get_description(td, variable, variable) %>% list()
+    value_label = text(td, variable) %>% list()
   ))
 
   # only compute rest if stratified
   if (is.stratified(dscr)) {
 
     df_text <- df_text %>%
-      # rbind(data_frame(
-      #   group       = "__pvalues__",
-      #   value_label = compute_pvalues(td, variable, group)
-      # )) %>%
+      rbind(data_frame(
+        group       = "__pvalues__",
+        value_label = compute_pvalues(td, variable, group)
+      )) %>%
       rbind(
         data_frame(variable = variable, group = group) %>% group_by(group) %>%
-          do(value_label = get_description(td, .$variable, variable)) %>% ungroup()
+        do(value_label = text(td, .$variable)) %>% ungroup()
       )
 
   }
@@ -70,28 +63,30 @@ as_data_frame.TextDescriptor <- function(td, dscr, variable, group, ...) {
 }
 
 
-as.grob.TextDescriptor <- function(td, dscr, variable, group) {
+
+
+
+as_grob_list.dscr_text_descriptor <- function(td, dscr, varname, ...) {
 
   theme   <- dscr$theme_new
 
-  # create character data frame holding entries
-  df_text <- as_data_frame(td, dscr, variable, group)
+  df_text <- as_data_frame(td, dscr, varname, ...)
 
   # make actual grob, cannot use tableGrob as we need to control widths!
-  gt <- gtable(
-    widths = rep(unit(0, "in"), ncol(df_text))
-  )
+  # start with dummy gtable
+  gt <- gtable( widths = rep(unit(0, "in"), ncol(df_text)))
+
   for (i in 1:nrow(df_text)) {
 
     gt_row <- gtable(heights = unit(0, "in")) # automatically increased
 
     for (j in 1:ncol(df_text)) {
 
-      width   <- theme$colwidths$levels
+      width   <- theme$colwidths$levels %>% to_inches()
       style   <- theme$body$descriptor$style$value_cell
       colname <- sprintf("__level__%s", names(df_text)[j])
       if (colnames(df_text)[j] == "__descriptors__") {
-        width   <- theme$colwidths$descriptors
+        width   <- theme$colwidths$descriptors %>% to_inches()
         style   <- theme$body$descriptor$style$label_cell
         colname <- "__descriptors__"
       }
@@ -120,12 +115,12 @@ as.grob.TextDescriptor <- function(td, dscr, variable, group) {
   colnames(gt) <- colnames(df_text)
 
   res <- list(
-    `__label__` = justify(gt[ , "__descriptors__"], hjust = "center", vjust = "top"),
-    `__total__` = justify(gt[ , "__total__"], hjust = "center", vjust = "top"),
+    `__label__` = gt[ , "__descriptors__"],
+    `__total__` = gt[ , "__total__"],
     levels      = list()
   )
-  for (i in 3:ncol(gt)) {
-    new_element <- list(justify(gt[ , i], , hjust = "center", vjust = "top"))
+  for (i in 1:(ncol(gt) - 2)) {
+    new_element <- list(gt[ , i])
     names(new_element) <- colnames(gt)[i]
     res$levels  <- c(res$levels, new_element)
   }

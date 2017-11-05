@@ -69,7 +69,7 @@ describr <- function(
     stop(sprintf("'by' must be factor"))
 
   # create list of descriptors for stratum
-  group_descriptors <- list(dscr_n_perc)
+  group_descriptors <- list(dscr_n_perc())
 
   # create list of to hold variabe descrptors
   core <- list()
@@ -98,18 +98,20 @@ describr <- function(
 
 #' Make object plottable using \code{grid}
 #'
-#' \code{make_plottable} returns an object which can be plotted using
+#' \code{as_gtable} turns an object in a \code{gtable} which can be plotted using
 #' \code{\link[grid]{grid.draw}}.
 #'
 #' @param x object to plot.
 #'
+#' @return A \code{gtable}.
+#'
 #' @export
-make_plottable <- function(x, ...) {
-  UseMethod("make_plottable", x)
+as_gtable <- function(x, ...) {
+  UseMethod("as_gtable", x)
 }
 
 as.grob <- function(d, dscr, variable, group, ...) {
-  warning("as.grob is deprecated, use make_plottable instead")
+  warning("as.grob is deprecated, use as_gtable instead")
   UseMethod("as.grob", d)
 }
 
@@ -142,7 +144,7 @@ print.describrGtable <- function(x, maxwidth = unit(6, "in"), ...) {
 #'
 #' @name make_plottable
 #' @export
-make_plottable.describr <- function(dscr, ...) {
+as_gtable.describr <- function(dscr, ...) {
 
   # legacy, should be safe to remove later
   widths_padding_fct = 1.00

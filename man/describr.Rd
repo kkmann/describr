@@ -4,7 +4,7 @@
 \alias{describr}
 \title{\code{describr} object}
 \usage{
-describr(df, by = NULL, theme_new = theme_default_tmp(), pvalues = FALSE,
+describr(df, by = NULL, theme_new = theme_default(), pvalues = FALSE,
   totals = TRUE)
 }
 \arguments{
