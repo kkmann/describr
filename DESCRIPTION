@@ -13,6 +13,9 @@ Imports: tidyverse, gtable, grid, gridExtra, kSamples, ompr, ompr.roi, ROI.plugi
 Suggests: testthat
 Collate: 
   'util.R'
+  'pvalues.R'
+  'descriptor_new.R'
+  'dscr_text_descriptor.R'
   'Descriptor.R'
   'PlotDescriptor.R'
   'Statistic.R'
@@ -27,7 +30,6 @@ Collate:
   'optimize_colwidths.R'
   'split_pages.R'
   'to_pdf.R'
-  'tests.R'
   'theme_new.R'
   'theme_debug.R'
 RoxygenNote: 6.0.1

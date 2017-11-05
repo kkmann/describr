@@ -27,7 +27,7 @@ to_pdf <- function(x, name, ...) {
 #' @export
 to_pdf.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, ...) {
 
-  make_plottable(x) %>%
+  as_gtable(x) %>%
     optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
     split_pages(maxheight = unit(maxheight, "in")) ->
     grob_list

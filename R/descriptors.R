@@ -13,6 +13,11 @@ dscr_n_perc <- TextDescriptor(
 
 )
 
+
+
+
+
+# Tabulate factor ==============================================================
 dscr_freq <- TextDescriptor(
 
   text = function(data_sub, data_cpl) {
@@ -39,6 +44,42 @@ dscr_freq <- TextDescriptor(
   )
 
 )
+
+
+get_label.dscr_freq <- function(td, variable_group, variable_all) {
+
+  tbl    <- variable_all %>% table(useNA = "always")
+  names  <- c("n (row %)", names(tbl))
+
+  return(names)
+
+}
+
+
+get_description.dscr_freq <- function(td, variable_group, variable_all) {
+
+  tbl    <- variable_group %>% table(useNA = "always")
+  counts <- as.numeric(tbl)
+  freqs  <- counts / sum(counts)
+  res    <- c(
+    "", # first blank column is to align with "n (row %)" label
+    sapply(1:length(counts), function(i) sprintf("%i (%.1f%%)", counts[i], 100*freqs[i]))
+  )
+
+  return(res)
+
+}
+
+
+
+
+
+
+# ========================
+
+
+
+
 
 
 

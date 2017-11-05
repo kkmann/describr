@@ -5,7 +5,7 @@ optimize_columnwidths <- function(dscr_gtable, maxwidth  = unit(6, "in"), ...) {
 optimize_columnwidths.describr <- function(dscr, maxwidth  = unit(6, "in"), ...) {
 
   dscr %>%
-    make_plottable() %>%
+    as_gtable() %>%
     optimize_columnwidths(maxwidth = maxwidth)
 
 }
@@ -173,7 +173,7 @@ optimize_columnwidths.describrGtable <- function(
 
   }
 
-  adjusted_dt <- make_plottable(dscr)
+  adjusted_dt <- as_gtable(dscr)
 
   return(adjusted_dt)
 
