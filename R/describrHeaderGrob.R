@@ -41,7 +41,7 @@ headerGrob <- function(dscr) { # print the header row of the table
   gt <- add_col_header(gt, descriptors_cell, theme$colwidths$descriptors)
 
   # total column
-  if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
+  if (!(is.stratified(dscr) & !dscr$totals)) { # total column always except opt out
 
     totals_cell <- element_table_grob(
       theme$header$style$levels,

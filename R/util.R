@@ -1,3 +1,113 @@
+create_colnames <- function(dscr) {
+
+  theme <- dscr$theme_new
+
+  colnames <- "__variables__"
+
+  colnames <- c(colnames, "__descriptors__separator", "__descriptors__")
+
+  # total column
+  if (!(is.stratified(dscr) & !dscr$totals)) { # total column always except opt out
+
+    colnames <- c(colnames, "__total__separator", "__total__")
+
+  }
+
+  # levels columns
+  if (is.stratified(dscr)) {
+
+    lvls <- levels(dscr$df[[dscr$by]])
+
+    for (i in 1:length(lvls)) {
+
+      colnames <- c(colnames,
+        sprintf("__level__%s__separator", lvls[i]),
+        sprintf("__level__%s", lvls[i])
+      )
+
+    }
+
+  }
+
+  # pvalue columns
+  if (dscr$pvalues & is.stratified(dscr)) {
+
+    colnames <- c(colnames, "__pvalues__separator", "__pvalues__", "__pvalues_idx__")
+
+  }
+
+  return(colnames)
+
+}
+
+
+
+
+
+create_col_widths_tracker  <- function(dscr, widths_padding_fct) { # counter!
+
+  col_names      <- create_colnames(dscr)
+  max_col_widths <- list()
+  for (i in 1:length(col_names)) {
+    max_col_widths[[col_names[i]]] <- unit(0, "in")
+    if (length(grep("__separator", col_names[i])) == 1) {
+      max_col_widths[[col_names[i]]] <- dscr$theme_new$colwidths$seperators
+    }
+  }
+
+  function(width, colname, return = FALSE) {
+    if (return) {
+      return(max_col_widths)
+    }
+
+    if (colname %in% names(max_col_widths)) {
+      max_col_widths[[colname]] <<- convertWidth(
+        max(
+          max_col_widths[[colname]],
+          convertWidth(width * widths_padding_fct, "in")
+        ),
+        "in")
+      return(NULL)
+    } else {
+      stop(sprintf("colname '%s' unknown", colname))
+    }
+  }
+
+}
+
+
+
+
+
+
+register_pvalue <- function() { # counter!
+
+  pvalue_labels <- character(0)
+
+  function(label, return = FALSE) {
+    if (return) {
+      return(pvalue_labels)
+    }
+
+    if (label %in% pvalue_labels) {
+      return(which(label == pvalue_labels))
+    } else {
+      pvalue_labels <<- cbind(pvalue_labels, label)
+      return(length(pvalue_labels))
+    }
+  }
+
+}
+
+
+
+
+# true if dscr has non-null list of strata
+is.stratified <- function(dscr, ...) length(dscr$by) == 1
+
+
+
+
 justify <- function(x, hjust="center", vjust="center",
                     hpadding = unit(0, "cm"), vpadding = unit(0, "cm")){
 

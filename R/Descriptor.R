@@ -12,7 +12,24 @@ Descriptor <- function() {
 }
 
 
-
+#' Specify descriptors for a table
+#'
+#' \code{describe} can be used to specify \emph{which} variables should be
+#' described \emph{how}.
+#'
+#' @param descr \code{\link{describr}} object; the specified descriptors will
+#'   be added for the selected variables in \code{dscr}.
+#' @param with list of descriptors to be used with the selected variables.
+#' @param ... one or more unquoted expressions separated by commas passed to
+#'   \code{\link[dplyr]{dplyr}}'s \code{\link[dplyr]{select}}.
+#'   All descriptors specified in \code{with} are used for the selected variables.
+#'   Currently not used for \code{describe_if}.
+#'
+#' @return An object of class \code{\link{describr}} where the defined descriptors
+#'   are added to the specified variables.
+#'
+#' @name describe
+#' @export
 describe <- function(dscr, with, ...) {
   UseMethod("describe", with)
 }
@@ -45,10 +62,20 @@ describe.default <- function(dscr, with, ...) {
 
 
 
+
+
+#' \code{describe_if} allows to to specify variables by using predicates as in
+#' \code{\link[dplyr]{select_if}}.
+#'
+#' @inheritParams describe
+#' @param .predicate A predicate function passed to \code{\link[dplyr]{select_if}}.
+#'
+#'
+#' @name describe
+#' @export
 describe_if <- function(dscr, .predicate, with, ...) {
   UseMethod("describe_if", with)
 }
-
 
 
 describe_if.default <- function(dscr, .predicate, with, ...) {
@@ -108,7 +135,7 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   gt <- gtable_add_grob(gt, grobs$`__label__`, 1, 1, name = "label", clip = "on")
 
   # total column
-  if (!(is.stratified.describr(dscr) & !dscr$totals)) { # total column always except opt out
+  if (!(is.stratified(dscr) & !dscr$totals)) { # total column always except opt out
 
     # add separator spacing
     gt <- gtable_add_cols(gt,
@@ -190,15 +217,3 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   return(gt)
 
 }
-
-
-
-
-
-as.grob <- function(d, dscr, variable, group, ...) {
-  UseMethod("as.grob", d)
-}
-
-
-
-
