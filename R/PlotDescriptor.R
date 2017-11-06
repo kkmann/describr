@@ -2,9 +2,9 @@ PlotDescriptor <- function(call, label, pvalue, minplotheight = unit(1.5, "cm"))
 
   res <- structure(
     list(
-      call   = substitute(call),
-      label  = label,
-      pvalue = pvalue,
+      call          = substitute(call),
+      label         = label,
+      pvalue        = pvalue,
       minplotheight = minplotheight
     ),
     class = c("PlotDescriptor", "Descriptor")
@@ -70,9 +70,12 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
 
   total <- element_table_grob(
     theme$body$descriptor$style$plot_cell,
+    pd    = pd,
     plot  = get_plot("__total__"),
     width = width,
-    name  = "__total__"
+    name  = "__total__",
+    dscr  = dscr,
+    colname = "__total__"
   )
 
   # all plots have same height, unify with label table
@@ -90,9 +93,12 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
     new_element <- list(
       element_table_grob(
         theme$body$descriptor$style$plot_cell,
-        plot  = get_plot(level),
-        width = width,
-        name  = level
+        pd      = pd,
+        plot    = get_plot(level),
+        width   = width,
+        name    = level,
+        dscr    = dscr,
+        colname = sprintf("__level__%s", level)
       )
     )
     #new_element[[1]]$heights <- height

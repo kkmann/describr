@@ -172,14 +172,18 @@ get_description.dscr_min_max <- function(td, variable_group, variable_all) {
 dscr_histogram <- function(
   label = "Histogram",
   nbins = 15,
-  pvalues = list(dscr_anderson_darling())
+  pvalues = list(dscr_anderson_darling()),
+  minheight = unit(1.5, "cm"),
+  minwidth = unit(2, "cm")
 ) {
 
   structure(
     list(
       label = label,
       nbins = nbins,
-      pvalues = pvalues
+      pvalues = pvalues,
+      minheight = minheight,
+      minwidth = minwidth
     ),
     class = c("dscr_histogram", "PlotDescriptor", "Descriptor")
   )
@@ -202,13 +206,17 @@ get_call.dscr_histogram <- function(pd, ...) {
 # Boxplot ====================================================================
 dscr_boxplot <- function(
   label = "Boxplot",
-  pvalues = list(dscr_anderson_darling())
+  pvalues = list(dscr_anderson_darling()),
+  minheight = unit(1.5, "cm"),
+  minwidth = unit(2, "cm")
 ) {
 
   structure(
     list(
       label   = label,
-      pvalues = pvalues
+      pvalues = pvalues,
+      minheight = minheight,
+      minwidth = minwidth
     ),
     class = c("dscr_boxplot", "PlotDescriptor", "Descriptor")
   )

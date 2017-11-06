@@ -152,6 +152,7 @@ element_table_wish_width.element_table_cell_text <- function(e, label) {
 element_table_cell_plot <- function(
   text_size,
   plot_height       = unit(3*1.2*text_size, "pt"),
+  plot_width        = unit(.5, "in"),
   background_color  = NULL,
   background_transparency = NULL,
   frame_line_color  = NULL,
@@ -168,11 +169,32 @@ element_table_cell_plot <- function(
 
 
 
-element_table_grob.element_table_cell_plot <- function(e, plot, width, name) {
+element_table_grob.element_table_cell_plot <- function(e, plot, width, name, pd,
+  dscr = NULL, colname = NULL, ...) {
+
+  plotheight <- e$plot_height %>% to_inches()
+  if (!is.null(pd$minheight)) {
+    plotheight <- max(e$plot_height, pd$minheight) %>% to_inches()
+  }
+
+  if (!is.null(dscr) & !is.null(colname)) {
+    if (!is.null(dscr$col_widths_tracker)) {
+      # determine preferred colwidth
+
+      if (!is.null(pd$minwidth)) {
+        preferred_width <- max(e$plot_width, pd$minwidth) %>% to_inches()
+      } else {
+        preferred_width <- e$plot_width %>% to_inches()
+      }
+
+      dscr$col_widths_tracker(preferred_width, colname)
+
+    }
+  }
 
   cell <- gtable(
     widths  = width,
-    heights = e$plot_height,
+    heights = plotheight,
     name    = name
   )
 

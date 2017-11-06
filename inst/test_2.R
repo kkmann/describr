@@ -15,7 +15,7 @@ df_iris_test
 
 # plot immediately
 df_iris_test %>%
-  describr(# by = Species, pvalues = TRUE,
+  describr(by = Species, pvalues = TRUE,
     theme_new = theme_default(text_size = 9) # pt
   ) %>%
   describe_if(
@@ -23,19 +23,13 @@ df_iris_test %>%
     with = list(
       dscr_mean(),
       dscr_sd(),
-      dscr_min_max()
+      dscr_min_max(),
+      dscr_histogram(minwidth = unit(4, "cm"))
     )
   ) %>%
   describe_if(
     is.factor,
     with = dscr_freq()
-  ) %>%
-  describe(
-    with = list(
-      dscr_histogram(),
-      dscr_boxplot()
-    ),
-    Sepal.Width
   ) ->
   dt
 
