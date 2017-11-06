@@ -1,12 +1,12 @@
 Package: describr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Beautiful Descriptive Tables 
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Kevin Kunzmann
+Maintainer: Kevin Kunzmann <kunzmann@imbi.uni-heidelberg.de>
+Description: Create univariate descriptive tables for statistical reports.
+  Custom descriptors can be defined an the tables may contain graphics.
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -23,19 +23,16 @@ Suggests: testthat
 Collate: 
   'util.R'
   'pvalues.R'
-  'descriptor_new.R'
-  'dscr_text_descriptor.R'
   'Descriptor.R'
   'PlotDescriptor.R'
-  'Statistic.R'
   'TextDescriptor.R'
   'describrHeaderGrob.R'
   'describrVariableGrob.R'
   'describrBottomGrob.R'
-  'descriptors.R'
   'element_table_cell.R'
   'element_table_separators.R'
   'describr.R'
+  'descriptors.R'
   'optimize_colwidths.R'
   'split_pages.R'
   'to_pdf.R'

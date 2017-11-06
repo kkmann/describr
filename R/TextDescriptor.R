@@ -17,14 +17,6 @@ TextDescriptor <- function(text, label, pvalue) {
 
 
 
-
-as_grob_list.TextDescriptor <- function(td, dscr, varname) {
-
-  as.grob(td, dscr, dscr$df[[varname]], dscr$df[[dscr$by]])
-
-}
-
-
 as_data_frame.TextDescriptor <- function(td, dscr, variable, group, ...) {
 
   # TODO: use correct colnames right away
@@ -124,10 +116,12 @@ as.grob.TextDescriptor <- function(td, dscr, variable, group) {
     `__total__` = justify(gt[ , "__total__"], hjust = "center", vjust = "top"),
     levels      = list()
   )
-  for (i in 3:ncol(gt)) {
-    new_element <- list(justify(gt[ , i], , hjust = "center", vjust = "top"))
-    names(new_element) <- colnames(gt)[i]
-    res$levels  <- c(res$levels, new_element)
+  if (is.stratified(dscr)) {
+    for (i in 3:ncol(gt)) {
+      new_element <- list(justify(gt[ , i], , hjust = "center", vjust = "top"))
+      names(new_element) <- colnames(gt)[i]
+      res$levels  <- c(res$levels, new_element)
+    }
   }
 
   return(res)

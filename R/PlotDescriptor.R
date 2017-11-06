@@ -14,11 +14,7 @@ PlotDescriptor <- function(call, label, pvalue, minplotheight = unit(1.5, "cm"))
 
 }
 
-as_grob_list.PlotDescriptor <- function(td, dscr, varname) {
 
-  as.grob(td, dscr, dscr$df[[varname]], dscr$df[[dscr$by]])
-
-}
 
 get_call <- function(d, ...) {
   UseMethod("get_call", d)

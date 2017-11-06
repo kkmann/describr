@@ -135,7 +135,9 @@ describe_if.default <- function(dscr, .predicate, with, ...) {
     dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
   }
 
-  dscr$core[[dscr$by]] <- NULL # always exclude grouping variable!
+  if (is.stratified(dscr)) {
+    dscr$core[[dscr$by]] <- NULL # always exclude grouping variable!
+  }
 
   return(dscr)
 
@@ -144,12 +146,29 @@ describe_if.default <- function(dscr, .predicate, with, ...) {
 
 
 
+as_grob_list <- function(d, dscr, varname, ...) {
+  UseMethod("as_grob_list", d)
+}
+
+as_grob_list.Descriptor <- function(td, dscr, varname) {
+
+  variable <- dscr$df[[varname]]
+
+  group <- factor(rep("__total__", length(variable)))
+
+  if (is.stratified(dscr)) {
+    group  <- dscr$df[[dscr$by]]
+  }
+
+  as.grob(td, dscr, variable, group)
+
+}
+
+
 
 descriptorGrob <- function(d, dscr, varname, ...) {
   UseMethod("descriptorGrob", d)
 }
-
-
 
 descriptorGrob.default <- function(d, dscr, varname, ...) {
 
@@ -159,8 +178,12 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
 
   theme    <- dscr$theme_new
 
-  group    <- dscr$df[[dscr$by]]
   variable <- dscr$df[[varname]]
+  if (is.stratified(dscr)) {
+    group  <- dscr$df[[dscr$by]]
+  } else {
+    group <- factor(rep("__total__", length(variable)))
+  }
 
   grobs    <- as_grob_list(d, dscr, varname)
 

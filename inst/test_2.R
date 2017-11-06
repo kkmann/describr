@@ -15,7 +15,7 @@ df_iris_test
 
 # plot immediately
 df_iris_test %>%
-  describr(by = Species, pvalues = TRUE,
+  describr(# by = Species, pvalues = TRUE,
     theme_new = theme_default(text_size = 9) # pt
   ) %>%
   describe_if(

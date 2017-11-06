@@ -2,18 +2,22 @@ bottomGrob <- function(dscr, gtable, footnote_text = "") {
 
   theme <- dscr$theme_new$bottom
 
-  pvalue_labels         <- dscr$register_pvalue("", return = TRUE)
-  pvalue_footnotes_list <- list()
-  for (i in 1:length(pvalue_labels)) {
-    pvalue_footnotes_list <- c(
-      pvalue_footnotes_list,
-      sprintf("(%i): %s", i, pvalue_labels[i])
+  if (is.stratified(dscr) & dscr$pvalues) {
+    pvalue_labels         <- dscr$register_pvalue("", return = TRUE)
+    pvalue_footnotes_list <- list()
+    for (i in 1:length(pvalue_labels)) {
+      pvalue_footnotes_list <- c(
+        pvalue_footnotes_list,
+        sprintf("(%i): %s", i, pvalue_labels[i])
+      )
+    }
+    pvalues_footnote <- do.call(
+      paste,
+      args = c(pvalue_footnotes_list, list(sep = ", "))
     )
+  } else {
+    pvalues_footnote <- ""
   }
-  pvalues_footnote <- do.call(
-    paste,
-    args = c(pvalue_footnotes_list, list(sep = ", "))
-  )
 
   width <- convertUnit(sum(gtable$widths), "in")
 

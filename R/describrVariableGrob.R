@@ -2,10 +2,12 @@ variableGrob <- function(dscr, varname) {
 
   theme <- dscr$theme_new
 
-  if (dscr$by == varname) {
-    descriptor_list <- dscr$group_descriptors
-  } else {
-    descriptor_list <- dscr$core[[varname]]
+  descriptor_list <- dscr$core[[varname]]
+
+  if (is.stratified(dscr)) {
+    if (dscr$by == varname) {
+      descriptor_list <- dscr$group_descriptors
+    }
   }
 
   # create gtables
@@ -45,8 +47,9 @@ variableGrob <- function(dscr, varname) {
     pos = 0
   )
 
-  if (dscr$by == varname) {
-    varname <- ""
+  if (is.stratified(dscr)) {
+    if (dscr$by == varname)
+      varname <- ""
   }
 
   gt <- gtable_add_grob(
