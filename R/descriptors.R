@@ -29,10 +29,6 @@ get_description.dscr_n_perc <- function(td, variable_group, variable_all) {
 
 }
 
-
-
-
-
 # Tabulate factor ==============================================================
 dscr_freq <- function(
   format = "%3i (%5.1f%%)",
@@ -50,6 +46,7 @@ dscr_freq <- function(
 }
 
 
+
 get_label.dscr_freq <- function(td, variable_all) {
 
   tbl    <- variable_all %>% table(useNA = "always")
@@ -58,7 +55,6 @@ get_label.dscr_freq <- function(td, variable_all) {
   return(names)
 
 }
-
 
 get_description.dscr_freq <- function(td, variable_group, variable_all) {
 

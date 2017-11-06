@@ -251,6 +251,7 @@ label.dscr_levene <- function(p, df, varname, groupname, ...) p$label
 
 # Homogeneity of distribution =================================================
 
+
 # Cross-table chi-squared test -------------------------------------------------
 
 #' p-value for chi-squared test (homogeineity of distributions)
