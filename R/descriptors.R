@@ -75,9 +75,6 @@ get_description.dscr_freq <- function(td, variable_group, variable_all) {
 
 
 
-
-
-
 # Mean =========================================================================
 dscr_mean <- function(
   label   = "Mean",
@@ -172,49 +169,56 @@ get_description.dscr_min_max <- function(td, variable_group, variable_all) {
 
 
 # Histogram ====================================================================
-dscr_histogram <- PlotDescriptor(
+dscr_histogram <- function(
+  label = "Histogram",
+  nbins = 15,
+  pvalues = list(dscr_anderson_darling())
+) {
 
-  ggplot(aes(variable)) + geom_histogram(bins = 10),
-
-  function(data) "Histogram",
-
-  pvalue = structure(
-    function(data, group) {
-      tryCatch(
-        {
-          tmp <- kSamples::ad.test(data ~ group, data = data_frame(data, group), method = "asymptotic")
-          return(tmp$ad[1, " asympt. P-value"])
-        },
-        error = function(e) NA
-      )
-    },
-    label = "asymptotic Anderson-Darling k-sample test (Version 1)"
+  structure(
+    list(
+      label = label,
+      nbins = nbins,
+      pvalues = pvalues
+    ),
+    class = c("dscr_histogram", "PlotDescriptor", "Descriptor")
   )
 
-)
+}
+
+get_call.dscr_histogram <- function(pd, ...) {
+
+  nbins <- pd$nbins
+
+  return(substitute(
+    ggplot(aes(variable)) + geom_histogram(bins = nbins), list(nbins = nbins)
+  ))
+
+}
 
 
 
 
+# Boxplot ====================================================================
+dscr_boxplot <- function(
+  label = "Boxplot",
+  pvalues = list(dscr_anderson_darling())
+) {
 
-dscr_boxplot <- PlotDescriptor(
-
-  ggplot(aes(x = 1, y = variable)) + stat_boxplot() + coord_flip(),
-
-  function(data) "Boxplot",
-
-  pvalue = structure(
-    function(data, group) {
-      tryCatch(
-        {
-          tmp <- kSamples::ad.test(data ~ group, data = data_frame(data, group), method = "asymptotic")
-          return(tmp$ad[1, " asympt. P-value"])
-        },
-        error = function(e) NA
-      )
-    },
-    label = "asymptotic Anderson-Darling k-sample test (Version 1)"
+  structure(
+    list(
+      label   = label,
+      pvalues = pvalues
+    ),
+    class = c("dscr_boxplot", "PlotDescriptor", "Descriptor")
   )
 
-)
+}
 
+get_call.dscr_boxplot <- function(pd, ...) {
+
+  return(substitute(
+    ggplot(aes(x = 1, y = variable)) + stat_boxplot() + coord_flip()
+  ))
+
+}

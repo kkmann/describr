@@ -17,6 +17,10 @@ get_label <- function(d, variable_all, ...) {
   UseMethod("get_label", d)
 }
 
+get_label.default <- function(d, ...) {
+  d$label
+}
+
 get_description <- function(d, variable_group, variable_all, ...) {
   UseMethod("get_description", d)
 }

@@ -29,11 +29,14 @@ df_iris_test %>%
   describe_if(
     is.factor,
     with = dscr_freq()
+  ) %>%
+  describe(
+    with = list(
+      dscr_histogram(),
+      dscr_boxplot()
+    ),
+    Sepal.Width
   ) ->
-  # describe(
-  #   with = list(dscr_histogram, dscr_boxplot),
-  #   Sepal.Width
-  # ) ->
   dt
 
 as_gtable(dt)

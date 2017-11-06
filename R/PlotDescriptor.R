@@ -14,6 +14,15 @@ PlotDescriptor <- function(call, label, pvalue, minplotheight = unit(1.5, "cm"))
 
 }
 
+as_grob_list.PlotDescriptor <- function(td, dscr, varname) {
+
+  as.grob(td, dscr, dscr$df[[varname]], dscr$df[[dscr$by]])
+
+}
+
+get_call <- function(d, ...) {
+  UseMethod("get_call", d)
+}
 
 
 as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
@@ -22,7 +31,7 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
 
   lbl <- element_table_grob(
     theme$body$descriptor$style$label_cell,
-    label = pd$label(variable),
+    label = get_label(pd, variable),
     width = theme$colwidths$descriptors,
     name  = "label",
     dscr = dscr,
@@ -43,7 +52,7 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
 
     }
 
-    str <- paste0(str, paste0(deparse(pd$call), collapse = ""))
+    str <- paste0(str, paste0(deparse(get_call(pd)), collapse = ""))
 
     # find scale of variable and unify across all levels
     tmp <- eval(parse(text = str))

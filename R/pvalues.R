@@ -379,11 +379,6 @@ compute_pvalue.dscr_anderson_darling <- function(p, df, varname, groupname, ...)
 
 label.dscr_anderson_darling <- function(p, df, varname, groupname, ...) {
 
-  if (!is.factor(df[[varname]]))
-    stop("variable must be a factor")
-
-  .is_proper_group(df, groupname)
-
   return(p$label)
 
 }
