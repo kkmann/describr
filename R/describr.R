@@ -3,9 +3,12 @@
 #' @description This package provides functionality to define descriptive tables
 #' with minimum
 #' effort and human-readable code using non-standard evaluation.
-#' It is design to work well with the tidyverse and heavily relies on
+#' It is designed to work well with the tidyverse and heavily relies on
 #' functionality of \code{\link[dplyr]{select}} and
 #' \code{\link[dplyr]{select_if}} of the \code{\link[dplyr]{dplyr}} package.
+#'
+#' The central \code{\link{describr}} object is the basis for defining a
+#' table.
 #'
 #' @docType package
 #' @name describr-package

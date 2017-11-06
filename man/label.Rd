@@ -2,25 +2,18 @@
 % Please edit documentation in R/pvalues.R
 \name{label}
 \alias{label}
-\title{Get a label string for the corresponding p-value}
+\title{Get a label string from object}
 \usage{
-label(ht, df, varname, groupname, ...)
+label(x, ...)
 }
 \arguments{
-\item{df}{data frame}
+\item{x}{object}
 
-\item{varname}{character string giving name of variable to test for homogeneity
-with respect to group.}
-
-\item{groupname}{character string giving name of grouping-variable (a factor)
-in df.}
-
-\item{p}{p-value object}
+\item{...}{other parameters passed to methods}
 }
 \value{
-A string identifying the method used to compute the corresponding
-  p-value.
+A string identifying x.
 }
 \description{
-Get a label string for the corresponding p-value
+Get a label string from object
 }
