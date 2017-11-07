@@ -3,10 +3,16 @@ exportPattern("^[[:alpha:]]+")
 import(
   grid,
   gtable,
-  gridExtra,
-  tidyverse,
+  dplyr,
+  tidyr,
   ompr,
   ompr.roi,
   ROI,
   ROI.plugin.glpk
 )
+
+importFrom("grDevices", "dev.off", "pdf")
+importFrom("methods", "is")
+importFrom("stats", "as.formula", "chisq.test", "kruskal.test",
+           "oneway.test", "sd", "wilcox.test")
+importFrom("utils", "tail")

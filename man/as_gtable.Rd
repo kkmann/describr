@@ -2,9 +2,13 @@
 % Please edit documentation in R/describr.R
 \name{as_gtable}
 \alias{as_gtable}
+\alias{as_gtable}
+\alias{as_gtable.describr}
 \title{Make object plottable using \code{grid}}
 \usage{
 as_gtable(x, ...)
+
+\method{as_gtable}{describr}(dscr, ...)
 }
 \arguments{
 \item{x}{object to plot.}
