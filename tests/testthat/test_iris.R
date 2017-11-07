@@ -1,4 +1,4 @@
-library(tidyverse, quietly = TRUE)
+library(dplyr, quietly = TRUE)
 
 context("Iris example")
 

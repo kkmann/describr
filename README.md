@@ -1,5 +1,7 @@
 # describr - publication quality descriptive tables with R
 
+[![Travis-CI Build Status](https://travis-ci.org/kkmann/describr.svg?branch=master)](https://travis-ci.org/kkmann/describr)
+
 Tired of fiddling with boring 'univariat descriptive tables' that everybody (should) want but nobody wants to do - `describr` (hopefully) resolves this issue and makes generating nice-looking descriptive tables (almost) fun!
 
 ## Installation

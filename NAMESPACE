@@ -4,6 +4,7 @@ import(
   grid,
   gtable,
   dplyr,
+  ggplot2,
   tidyr,
   ompr,
   ompr.roi,
