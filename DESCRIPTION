@@ -17,8 +17,8 @@ Imports:
   grid, 
   ompr, 
   ompr.roi, 
-  ROI.plugin.glpk, 
   ROI,
+  ROI.plugin.glpk, 
   kSamples, 
   car,
   methods
