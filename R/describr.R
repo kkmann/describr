@@ -126,7 +126,9 @@ as.grob <- function(d, dscr, variable, group, ...) {
 # use print to plot instantly
 print.describr <- function(x, maxwidth = unit(6, "in"), ...) {
 
-  make_plottable(x) %>%
+  grid.newpage()
+
+  as_gtable(x) %>%
     optimize_columnwidths(maxwidth = maxwidth) %>%
     grid.draw()
 
@@ -134,6 +136,8 @@ print.describr <- function(x, maxwidth = unit(6, "in"), ...) {
 
 # use print to plot instantly
 print.describrGtable <- function(x, maxwidth = unit(6, "in"), ...) {
+
+  grid.newpage()
 
   grid.draw(x)
 
@@ -147,7 +151,7 @@ print.describrGtable <- function(x, maxwidth = unit(6, "in"), ...) {
 #' (actually a \code{describrGtable < gtable}) ready to be plotted using
 #' \code{grid.draw()).
 #'
-#' @name make_plottable
+#' @name as_gtable
 #' @export
 as_gtable.describr <- function(dscr, ...) {
 

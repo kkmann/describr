@@ -24,7 +24,7 @@ df_iris_test %>%
       dscr_mean(),
       dscr_sd(),
       dscr_min_max(),
-      dscr_histogram(minwidth = unit(4, "cm"))
+      dscr_histogram()
     )
   ) %>%
   describe_if(
@@ -35,4 +35,4 @@ df_iris_test %>%
 
 as_gtable(dt)
 
-to_pdf(dt, name = "iris_test_page")
+to_pdf(dt, name = "iris_test_page", maxheight = 8)
