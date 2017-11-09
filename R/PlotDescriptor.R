@@ -88,22 +88,24 @@ as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
     `__total__` = total,
     levels      = list()
   )
-  for (i in 1:length(levels(group))) {
-    level <- levels(group)[i]
-    new_element <- list(
-      element_table_grob(
-        theme$body$descriptor$style$plot_cell,
-        pd      = pd,
-        plot    = get_plot(level),
-        width   = width,
-        name    = level,
-        dscr    = dscr,
-        colname = sprintf("__level__%s", level)
+  if (is.stratified(dscr)) {
+    for (i in 1:length(levels(group))) {
+      level <- levels(group)[i]
+      new_element <- list(
+        element_table_grob(
+          theme$body$descriptor$style$plot_cell,
+          pd      = pd,
+          plot    = get_plot(level),
+          width   = width,
+          name    = level,
+          dscr    = dscr,
+          colname = sprintf("__level__%s", level)
+        )
       )
-    )
-    #new_element[[1]]$heights <- height
-    names(new_element)       <- level
-    res$levels  <- c(res$levels, new_element)
+      #new_element[[1]]$heights <- height
+      names(new_element)       <- level
+      res$levels  <- c(res$levels, new_element)
+    }
   }
 
   return(res)
