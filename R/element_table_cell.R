@@ -52,13 +52,16 @@ element_table_grob.element_table_cell_text <- function(
 
   if (!is.null(dscr) & !is.null(colname)) {
     if (!is.null(dscr$col_widths_tracker)) {
+
       # determine preferred colwidth
       vp_tmp <- viewport(gp = .as.text.gp(e))
       pushViewport(vp_tmp)
-      preferred_width <- convertWidth(stringWidth(label), "in")
+      preferred_width <- convertWidth(
+        1.05*convertWidth(stringWidth(label), "in"), "in")
       popViewport()
 
       dscr$col_widths_tracker(preferred_width, colname)
+
     }
   }
 

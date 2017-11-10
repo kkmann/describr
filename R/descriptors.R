@@ -29,6 +29,41 @@ get_description.dscr_n_perc <- function(td, variable_group, variable_all) {
 
 }
 
+
+
+# Group counts and percent =====================================================
+dscr_n_na <- function(
+  format = "%3i (%5.1f%%)",
+  pvalues = list(
+    dscr_no_test()
+  )
+) {
+
+  structure(
+    list(
+      format  = format,
+      pvalues = pvalues
+    ),
+    class = c("dscr_n_na", "TextDescriptor", "Descriptor")
+  )
+
+}
+
+
+get_label.dscr_n_na <- function(td, variable_all) c("#na (%)")
+
+
+get_description.dscr_n_na <- function(td, variable_group, variable_all) {
+
+  sprintf(td$format,
+    sum(is.na(variable_group)),
+    100*sum(is.na(variable_group))/length(variable_all)
+  )
+
+}
+
+
+
 # Tabulate factor ==============================================================
 dscr_freq <- function(
   format = "%3i (%5.1f%%)",
@@ -134,6 +169,72 @@ get_description.dscr_sd <- function(td, variable_group, variable_all) {
 }
 
 
+
+# Mean (SD) ====================================================================
+dscr_mean_sd <- function(
+  label   = "Mean (SD)",
+  format  = "%.2f (%.2f)",
+  pvalues = list(dscr_Welch_ANOVA())
+) {
+
+  structure(
+    list(
+      label   = label,
+      format  = format,
+      pvalues = pvalues
+    ),
+    class = c("dscr_mean_sd", "TextDescriptor", "Descriptor")
+  )
+
+}
+
+
+get_label.dscr_mean_sd <- function(td, variable_all) td$label
+
+
+get_description.dscr_mean_sd <- function(td, variable_group, variable_all) {
+
+  sprintf(
+    td$format,
+    mean(variable_group, na.rm = TRUE),
+    sd(variable_group, na.rm = TRUE)
+  )
+
+}
+
+
+
+# Median (IQR) ====================================================================
+dscr_median_iqr <- function(
+  label   = "Median (IQR)",
+  format  = "%.2f (%.2f)",
+  pvalues = list(dscr_Kruskal())
+) {
+
+  structure(
+    list(
+      label   = label,
+      format  = format,
+      pvalues = pvalues
+    ),
+    class = c("dscr_median_iqr", "TextDescriptor", "Descriptor")
+  )
+
+}
+
+
+get_label.dscr_median_iqr <- function(td, variable_all) td$label
+
+
+get_description.dscr_median_iqr <- function(td, variable_group, variable_all) {
+
+  sprintf(
+    td$format,
+    median(variable_group, na.rm = TRUE),
+    sum(quantile(variable_group, probs = c(.25, .75), na.rm = TRUE) * c(-1, 1))
+  )
+
+}
 
 
 

@@ -28,16 +28,44 @@ optimize_columnwidths.describrGtable <- function(
   required_colwidths <- dscr$col_widths_tracker(0, 0, TRUE)
   required_colwidths_in <- sapply(
     required_colwidths,
-    function(x) convertUnit(x, "in", valueOnly = TRUE)
+    function(x) convertUnit(x, "in", valueOnly = TRUE)*1.1
   )
 
-  if (sum(required_colwidths_in) <= maxwidth) {
+  width_overflow <- FALSE
+  if (convertUnit(required_colwidths$`__variables__`, "in", valueOnly = TRUE) >
+      convertUnit(dscr$theme_new$colwidths$variables, "in", valueOnly = TRUE)) {
+    width_overflow <- TRUE
+  }
+  if (convertUnit(required_colwidths$`__descriptors__`, "in", valueOnly = TRUE) >
+      convertUnit(dscr$theme_new$colwidths$descriptors, "in", valueOnly = TRUE)) {
+    width_overflow <- TRUE
+  }
+  if (is.stratified(dscr)) {
+    if (convertUnit(required_colwidths$`__pvalues__`, "in", valueOnly = TRUE) >
+        convertUnit(dscr$theme_new$colwidths$pvalues, "in", valueOnly = TRUE)) {
+      width_overflow <- TRUE
+    }
+    if (convertUnit(required_colwidths$`__pvalues_idx__`, "in", valueOnly = TRUE) >
+        convertUnit(dscr$theme_new$colwidths$pvalues_idx, "in", valueOnly = TRUE)) {
+      width_overflow <- TRUE
+    }
+  }
+  for (colname in names(required_colwidths)) {
+    if (length(grep("__level__", colname)) == 1 | colname == "__total__") {
+      if (convertUnit(required_colwidths[[colname]], "in", valueOnly = TRUE) >
+          convertUnit(dscr$theme_new$colwidths$levels, "in", valueOnly = TRUE)) {
+        width_overflow <- TRUE
+      }
+    }
+  }
 
-    dscr$theme_new$colwidths$variables <- required_colwidths$`__variables__`
+  if ((sum(required_colwidths_in) <= maxwidth) & !width_overflow) {
+
+    dscr$theme_new$colwidths$variables   <- required_colwidths$`__variables__`
 
     dscr$theme_new$colwidths$descriptors <- required_colwidths$`__descriptors__`
 
-    dscr$theme_new$colwidths$pvalues <- required_colwidths$`__pvalues__`
+    dscr$theme_new$colwidths$pvalues     <- required_colwidths$`__pvalues__`
 
     dscr$theme_new$colwidths$pvalues_idx <- required_colwidths$`__pvalues_idx__`
 
