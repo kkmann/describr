@@ -36,3 +36,5 @@ df_iris_test %>%
 as_gtable(dt)
 
 to_pdf(dt, name = "iris_test_page", maxheight = 8)
+
+to_png(dt, name = "iris_test_page", maxheight = 8)
