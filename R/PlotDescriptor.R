@@ -21,7 +21,7 @@ get_call <- function(d, ...) {
 }
 
 
-as.grob.PlotDescriptor <- function(pd, dscr, variable, group) {
+as_gtable.PlotDescriptor <- function(pd, dscr, variable, group) {
 
   theme <- dscr$theme_new
 

@@ -9,7 +9,7 @@ iris %>%
       labels = c("hi", "ho", "xXx", "I am a level with long level-name")
     )
   ) ->
-df_iris_test
+  df_iris_test
 
 
 
@@ -20,14 +20,19 @@ df_iris_test %>%
   ) %>%
   describe_if(
     is.numeric,
-    with = list(dscr_mean_sd, dscr_median_iqr, dscr_range)
+    with = list(
+      dscr_mean(),
+      dscr_sd(),
+      dscr_min_max(),
+      dscr_histogram()
+    )
   ) %>%
   describe_if(
     is.factor,
-    with = dscr_freq
-  ) %>%
-  describe(
-    with = list(dscr_histogram, dscr_boxplot, dscr_violin, dscr_qqnorm),
-    Sepal.Width
-  ) %>%
-  to_pdf(name = "iris_test_page")
+    with = dscr_freq()
+  ) ->
+  dt
+
+as_gtable(dt)
+
+to_pdf(dt, name = "iris_test_page", maxheight = 8)

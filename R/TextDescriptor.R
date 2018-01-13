@@ -62,7 +62,7 @@ as_data_frame.TextDescriptor <- function(td, dscr, variable, group, ...) {
 }
 
 
-as.grob.TextDescriptor <- function(td, dscr, variable, group) {
+as_gtable.TextDescriptor <- function(td, dscr, variable, group) {
 
   theme   <- dscr$theme_new
 

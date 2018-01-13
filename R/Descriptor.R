@@ -160,7 +160,7 @@ as_grob_list.Descriptor <- function(td, dscr, varname) {
     group  <- dscr$df[[dscr$by]]
   }
 
-  as.grob(td, dscr, variable, group)
+  as_gtable(td, dscr, variable, group)
 
 }
 

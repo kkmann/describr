@@ -115,11 +115,6 @@ as_gtable <- function(x, ...) {
   UseMethod("as_gtable", x)
 }
 
-as.grob <- function(d, dscr, variable, group, ...) {
-  warning("as.grob is deprecated, use as_gtable instead")
-  UseMethod("as.grob", d)
-}
-
 
 
 
