@@ -85,7 +85,7 @@ dscr_freq <- function(
 get_label.dscr_freq <- function(td, variable_all) {
 
   tbl    <- variable_all %>% table(useNA = "always")
-  names  <- c("n (row %)", names(tbl))
+  names  <- c("n (%)", names(tbl))
 
   return(names)
 

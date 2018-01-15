@@ -15,7 +15,7 @@ split_pages <- function(dscr_gtable, maxheight = unit(11.69 - 3, "in")) {
 
   for (varname in varnames) {
 
-    var_inds <- grep(sprintf("__variable__%s_", varname), rownames(dscr_gtable))
+    var_inds <- grep(sprintf("__variable__%s_", varname), rownames(dscr_gtable), fixed = TRUE)
 
     new_height <- current_height + sum(heights_in[var_inds])
 
