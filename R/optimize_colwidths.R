@@ -186,8 +186,10 @@ optimize_columnwidths.describrGtable <- function(
 
     dscr$theme_new$colwidths$variables   <- col_widths_opt[grep("__variables__", col_names)[1]]
     dscr$theme_new$colwidths$descriptors <- col_widths_opt[grep("__descriptors__", col_names)[2]]
-    dscr$theme_new$colwidths$pvalues     <- col_widths_opt[grep("__pvalues__", col_names)[2]]
-    dscr$theme_new$colwidths$pvalues_idx <- col_widths_opt[grep("__pvalues_idx__", col_names)[1]]
+    if (is.stratified(dscr)) {
+      dscr$theme_new$colwidths$pvalues     <- col_widths_opt[grep("__pvalues__", col_names)[2]]
+      dscr$theme_new$colwidths$pvalues_idx <- col_widths_opt[grep("__pvalues_idx__", col_names)[1]]
+    }
 
     # determine maximal level width
     max_level_width <- convertUnit(max(col_widths_opt[level_inds]), "in")
