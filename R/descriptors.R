@@ -205,9 +205,9 @@ get_description.dscr_mean_sd <- function(td, variable_group, variable_all) {
 
 
 # Median (IQR) ====================================================================
-dscr_median_iqr <- function(
-  label   = "Median (IQR)",
-  format  = "%.2f (%.2f)",
+dscr_median_q1_q3 <- function(
+  label   = "Median (Q1, Q3)",
+  format  = "%.2f (%.2f, %.2f)",
   pvalues = list(dscr_Kruskal())
 ) {
 
@@ -217,21 +217,22 @@ dscr_median_iqr <- function(
       format  = format,
       pvalues = pvalues
     ),
-    class = c("dscr_median_iqr", "TextDescriptor", "Descriptor")
+    class = c("dscr_median_q1_q3", "TextDescriptor", "Descriptor")
   )
 
 }
 
 
-get_label.dscr_median_iqr <- function(td, variable_all) td$label
+get_label.dscr_median_q1_q3 <- function(td, variable_all) td$label
 
 
-get_description.dscr_median_iqr <- function(td, variable_group, variable_all) {
+get_description.dscr_median_q1_q3 <- function(td, variable_group, variable_all) {
 
   sprintf(
     td$format,
     median(variable_group, na.rm = TRUE),
-    sum(quantile(variable_group, probs = c(.25, .75), na.rm = TRUE) * c(-1, 1))
+    quantile(variable_group, probs = .25, na.rm = TRUE),
+    quantile(variable_group, probs = .75, na.rm = TRUE)
   )
 
 }

@@ -21,8 +21,8 @@ df_iris_test %>%
   describe_if(
     is.numeric,
     with = list(
-      dscr_mean(),
-      dscr_sd(),
+      dscr_mean_sd(),
+      dscr_median_q1_q3(),
       dscr_min_max(),
       dscr_histogram()
     )

@@ -162,15 +162,17 @@ compute_pvalue.dscr_Kruskal <- function(p, df, varname, groupname, ...) {
 
   frml <- as.formula(sprintf("%s ~ %s", varname, groupname))
 
+  nlevels <- length(levels(df[["groupname"]]))
+
   if (nlevels == 2) {
     res <- tryCatch(
       wilcox.test(frml, data = df, exact = TRUE)$p.value,
-      error = function(e) NA
+      error = function(e) {print(e); return(NA)}
     )
   } else {
     res <- tryCatch(
-      kruskal.test(frml, data = df, exact = TRUE)$p.value,
-      error = function(e) NA
+      kruskal.test(frml, data = df)$p.value,
+      error = function(e) {print(e); return(NA)}
     )
   }
 
