@@ -221,6 +221,9 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
         pos = -1
       )
 
+      if (is.null(grobs$levels[[lvl]])) {
+        stop(sprintf("variable %s does not have level %s, drop empty?", varname, lvl))
+      }
       gt <- gtable_add_grob(gt,
         grobs$levels[[lvl]], 1, ncol(gt), name = lvl
       )
