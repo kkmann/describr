@@ -12,6 +12,15 @@ Descriptor <- function() {
 }
 
 
+# is called before invoking a descriptor for the first time,
+# use this to modify setting e.g. xlim for plots on global scale
+setup <- function(d, variable, group, ...) {
+  UseMethod("setup", d)
+}
+
+setup.default <- function(d, variable, group, ...) {
+  d
+}
 
 get_label <- function(d, variable_all, ...) {
   UseMethod("get_label", d)
@@ -184,6 +193,9 @@ descriptorGrob.default <- function(d, dscr, varname, ...) {
   } else {
     group <- factor(rep("__total__", length(variable)))
   }
+
+  # allow the descriptor to set global parameters
+  d <- setup(d, variable, group, ...)
 
   grobs    <- as_grob_list(d, dscr, varname)
 
