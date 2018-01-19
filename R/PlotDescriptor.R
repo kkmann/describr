@@ -23,6 +23,8 @@ get_call <- function(d, ...) {
 
 as_gtable.PlotDescriptor <- function(pd, dscr, variable, group) {
 
+  pd <- setup(pd, variable, group)
+
   theme <- dscr$theme_new
 
   lbl <- element_table_grob(

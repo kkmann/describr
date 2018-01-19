@@ -273,33 +273,53 @@ get_description.dscr_min_max <- function(td, variable_group, variable_all) {
 # Histogram ====================================================================
 dscr_histogram <- function(
   label = "Histogram",
-  nbins = 15,
-  pvalues = list(dscr_anderson_darling()),
+  nbins  = 10,
+  pvalues   = list(dscr_anderson_darling()),
   minheight = unit(1.5, "cm"),
-  minwidth = unit(2, "cm")
+  minwidth  = unit(2, "cm")
 ) {
 
   structure(
     list(
       label = label,
       nbins = nbins,
+      breaks = NA,
       pvalues = pvalues,
       minheight = minheight,
-      minwidth = minwidth
+      minwidth = minwidth,
+      xlim = NA
     ),
     class = c("dscr_histogram", "PlotDescriptor", "Descriptor")
   )
 
 }
 
+setup.dscr_histogram <- function(d, variable, group, ...) {
+
+  # save global range
+  d$xlim   <- range(variable, na.rm = TRUE)
+  rng <- range(variable, na.rm = TRUE)
+  delta <- rng[2] - rng[1]
+  d$breaks <- seq(rng[1] + .025*delta, rng[2] + .025*delta, length.out = d$nbins)
+  return(d)
+
+}
+
+
 get_call.dscr_histogram <- function(pd, ...) {
 
   nbins <- pd$nbins
 
-  return(substitute(
-    ggplot(aes(variable)) + geom_histogram(bins = nbins), list(nbins = nbins)
-  ))
+  if (any(is.na(pd$breaks)) | any(is.na(pd$xlim))) stop("call setup() first")
 
+  substitute(
+    ggplot(aes(variable)) +
+      geom_histogram(
+        aes(y = ..count../sum(..count..)),
+        breaks = tmp
+      ),
+    list(tmp = pd$breaks)
+  )
 }
 
 
