@@ -202,8 +202,15 @@ element_table_grob.element_table_cell_plot <- function(e, plot, width, name, pd,
   )
 
   # add actual plot as grob, keep only panel (table too small for axis!)
+
   cell <- gtable_add_grob(cell,
-      ggplotGrob(plot + theme_void()) %>% gtable_filter("panel"),
+    tryCatch({
+        ggplotGrob(plot + theme_void()) %>% gtable_filter("panel")
+      },
+      error = function(e) {
+        return(ggplotGrob(ggplot(data.frame(1)) + theme_void()) %>% gtable_filter("panel"))
+      }
+    ),
     1, 1, 1, 1, name = paste0(name, "_fg")
   )
 

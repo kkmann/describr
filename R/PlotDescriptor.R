@@ -42,32 +42,41 @@ as_gtable.PlotDescriptor <- function(pd, dscr, variable, group) {
 
   get_plot <- function(level) {
 
-    str <- "df %>% "
+    plot <- tryCatch({
 
-    if (level != "__total__") {
+        str <- "df %>% "
 
-      str <- paste0(str, sprintf("filter(group == '%s') %%>%% ", level))
+        if (level != "__total__") {
 
-    }
+          str <- paste0(str, sprintf("filter(group == '%s') %%>%% ", level))
 
-    str <- paste0(str, paste0(deparse(get_call(pd)), collapse = ""))
+        }
 
-    # find scale of variable and unify across all levels
-    tmp <- eval(parse(text = str))
-    mappings <- lapply(tmp$mapping, as.character)
-    if ("x" %in% names(mappings)) {
-      if (mappings$x == "variable") {
-        str <- paste0(str, " + xlim(range(df$variable))")
+        str <- paste0(str, paste0(deparse(get_call(pd)), collapse = ""))
+
+        # find scale of variable and unify across all levels
+        tmp <- eval(parse(text = str))
+        mappings <- lapply(tmp$mapping, as.character)
+        if ("x" %in% names(mappings)) {
+          if (mappings$x == "variable") {
+            str <- paste0(str, " + xlim(range(df$variable))")
+          }
+        }
+        if ("y" %in% names(mappings)) {
+          if (mappings$y == "variable") {
+            str <- paste0(str, " + ylim(range(df$variable))")
+          }
+        }
+
+        eval(parse(text = str))
+      },
+      error = function(e) {
+        print(e)
+        p <- ggplot(data.frame(1)) # empty plot
+        return(p)
       }
-    }
-    if ("y" %in% names(mappings)) {
-      if (mappings$y == "variable") {
-        str <- paste0(str, " + ylim(range(df$variable))")
-      }
-    }
-
-    return(eval(parse(text = str)))
-
+    )
+    return(plot)
   }
 
   total <- element_table_grob(
