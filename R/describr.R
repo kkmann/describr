@@ -66,9 +66,11 @@ describr <- function(
   # ensure stratum fits
   if (length(by) > 1) stop("currently only single stratum supported")
 
-  if (!(by %in% names(df))) stop(sprintf("stratum 'by = %s' not found"))
+  if (length(by) == 1) {
+    if (!(by %in% names(df))) stop(sprintf("stratum 'by = %s' not found"))
 
-  if (!(is.factor(df[[by]]))) stop(sprintf("'by' must be factor"))
+    if (!(is.factor(df[[by]]))) stop(sprintf("'by' must be factor"))
+  }
 
   # create list of descriptors for stratum
   group_descriptors <- list(dscr_n_perc())
