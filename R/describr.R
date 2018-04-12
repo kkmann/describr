@@ -149,6 +149,8 @@ print.describrGtable <- function(x, maxwidth = unit(6, "in"), ...) {
 #' @export
 as_gtable.describr <- function(dscr, ...) {
 
+  pdf("12345678910.pdf")
+
   # legacy, should be safe to remove later
   widths_padding_fct = 1.00
 
@@ -196,6 +198,9 @@ as_gtable.describr <- function(dscr, ...) {
   # store the initial describer object as attribute
   attr(gt, "describr")  <- dscr
   class(gt) <- c("describrGtable", class(gt))
+
+  dev.off()
+  unlink("12345678910.pdf")
 
   return(gt)
 
