@@ -18,6 +18,8 @@ optimize_columnwidths.describrGtable <- function(
 
   message(sprintf("optimizing column widths to %s ...", as.character(maxwidth)))
 
+  pdf("1234567891011.pdf")
+
   # retrieve original describer object
   dscr      <- attr(dscr_gtable, "describr")
 
@@ -206,6 +208,9 @@ optimize_columnwidths.describrGtable <- function(
     dscr$theme_new$colwidths$seperators <- min_sep_width
 
   }
+
+  dev.off()
+  unlink("1234567891011.pdf")
 
   adjusted_dt <- as_gtable(dscr)
 

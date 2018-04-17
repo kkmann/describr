@@ -120,18 +120,17 @@ as_gtable <- function(x, ...) {
 
 
 # use print to plot instantly
-print.describr <- function(x, maxwidth = unit(6, "in"), ...) {
+print.describr <- function(x, ...) {
 
   grid.newpage()
 
   as_gtable(x) %>%
-    optimize_columnwidths(maxwidth = maxwidth) %>%
     grid.draw()
 
 }
 
 # use print to plot instantly
-print.describrGtable <- function(x, maxwidth = unit(6, "in"), ...) {
+print.describrGtable <- function(x, ...) {
 
   grid.newpage()
 

@@ -1,5 +1,9 @@
 split_pages <- function(dscr_gtable, maxheight = unit(11.69 - 3, "in")) {
 
+  message(sprintf("splitting to pages with maximal height %s ...", as.character(maxheight)))
+
+  pdf("123456789101112.pdf")
+
   # very crude
 
   dscr <- attr(dscr_gtable, "describr")
@@ -38,6 +42,9 @@ split_pages <- function(dscr_gtable, maxheight = unit(11.69 - 3, "in")) {
     }
 
   }
+
+  dev.off()
+  unlink("123456789101112.pdf")
 
   pages <- c(pages, list(gt_tmp))
 
