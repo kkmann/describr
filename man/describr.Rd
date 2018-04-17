@@ -5,7 +5,7 @@
 \title{\code{describr} object}
 \usage{
 describr(df, by = NULL, theme_new = theme_default(), pvalues = FALSE,
-  totals = TRUE)
+  totals = TRUE, caption = "")
 }
 \arguments{
 \item{df}{a data frame.}

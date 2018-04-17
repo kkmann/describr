@@ -14,7 +14,7 @@ iris %>%
 test_that("Iris complete", {
 
   df_iris_test %>%
-    describr(by = Species, pvalues = TRUE, caption = "I am a caption",
+    describr(by = Species, pvalues = TRUE, # caption = "I am a caption",
       theme_new = theme_default(text_size = 9) # pt
     ) %>%
     describe_if(
