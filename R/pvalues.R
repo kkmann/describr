@@ -167,12 +167,12 @@ compute_pvalue.dscr_Kruskal <- function(p, df, varname, groupname, ...) {
   if (nlevels == 2) {
     res <- tryCatch(
       wilcox.test(frml, data = df, exact = TRUE)$p.value,
-      error = function(e) {print(e); return(NA)}
+      error = function(e) {warning(e); return(NA)}
     )
   } else {
     res <- tryCatch(
       kruskal.test(frml, data = df)$p.value,
-      error = function(e) {print(e); return(NA)}
+      error = function(e) {warning(e); return(NA)}
     )
   }
 
@@ -237,7 +237,7 @@ compute_pvalue.dscr_levene <- function(p, df, varname, groupname, ...) {
       frml,
       data = df[, c(varname, groupname)]
     )$`Pr(>F)`,
-    error = function(e) NA
+    error = function(e) {warning(e); NA}
   )
 
   return(res)
@@ -283,7 +283,7 @@ compute_pvalue.dscr_cross_table_chisq <- function(p, df, varname, groupname, ...
 
   res <- tryCatch(
     chisq.test(df[, c(varname, groupname)] %>% table(), correct = FALSE)$p.value,
-    error = function(e) NA
+    error = function(e) {warning(e); NA}
   )
 
   return(res)
@@ -323,7 +323,7 @@ compute_pvalue.dscr_one_sample_chisq <- function(p, df, varname, groupname, ...)
 
   res <- tryCatch(
     chisq.test(df[[groupname]] %>% table(), correct = FALSE)$p.value,
-    error = function(e) NA
+    error = function(e) {warning(e); NA}
   )
 
   return(res)
@@ -374,7 +374,7 @@ compute_pvalue.dscr_anderson_darling <- function(p, df, varname, groupname, ...)
       )
       return(tmp$ad[p$version, " asympt. P-value"])
     },
-    error = function(e) NA
+    error = function(e) {warning(e); NA}
   )
 
 }

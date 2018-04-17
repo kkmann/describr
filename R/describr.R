@@ -57,7 +57,8 @@ describr <- function(
   by        = NULL,
   theme_new = theme_default(),
   pvalues   = FALSE,
-  totals    = TRUE
+  totals    = TRUE,
+  caption   = ""
 ) {
 
   # capture stratum using non-standard evaluation
@@ -87,7 +88,8 @@ describr <- function(
       group_descriptors = group_descriptors,
       pvalues           = pvalues,
       totals            = totals,
-      theme_new         = theme_new
+      theme_new         = theme_new,
+      caption           = caption
     ),
     class = c("describr", "list")
   )
@@ -197,7 +199,7 @@ as_gtable.describr <- function(dscr, ...) {
 
   # store the initial describer object as attribute
   attr(gt, "describr")  <- dscr
-  class(gt) <- c("describrGtable", class(gt))
+  class(gt) <- c("describrGtable", class(gt), dscr$caption)
 
   dev.off()
   unlink("12345678910.pdf")
