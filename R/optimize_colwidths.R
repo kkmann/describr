@@ -16,6 +16,8 @@ optimize_columnwidths.describrGtable <- function(
   dscr_gtable, maxwidth  = unit(6, "in"), ...
 ) {
 
+  message(sprintf("optimizing column widths to %s ...", as.character(maxwidth)))
+
   # retrieve original describer object
   dscr      <- attr(dscr_gtable, "describr")
 
