@@ -191,7 +191,7 @@ as_gtable.describr <- function(dscr, ...) {
   }
 
   # footer
-  footer <- bottomGrob(dscr, gt)
+  footer <- bottomGrob(dscr, gt, dscr$caption)
   rownames(footer) <- sapply(1:nrow(footer), function(i) sprintf("__footer__%i", i))
   gt <- gtable_add_rows(gt, heights = convertUnit(grobHeight(footer), "in"))
   gt <- gtable_add_grob(gt, footer, nrow(gt), 1, nrow(gt), ncol(gt), name = "footer")
@@ -199,7 +199,7 @@ as_gtable.describr <- function(dscr, ...) {
 
   # store the initial describer object as attribute
   attr(gt, "describr")  <- dscr
-  class(gt) <- c("describrGtable", class(gt), dscr$caption)
+  class(gt) <- c("describrGtable", class(gt))
 
   dev.off()
   unlink("12345678910.pdf")
