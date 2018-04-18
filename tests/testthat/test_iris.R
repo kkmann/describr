@@ -20,18 +20,21 @@ test_that("Iris complete", {
     describe_if(
       is.numeric,
       with = list(
-        dscr_mean(),
-        dscr_histogram()
+        dscr_mean()#,
+        #dscr_histogram()
       )
     ) %>%
     describe_if(
       is.factor,
-      with = dscr_freq()
+      with = list(
+        dscr_freq(),
+        dscr_factor_barchart()
+      )
     ) %>%
-    describe(
-      with = list(dscr_boxplot()),
-      Sepal.Width
-    ) %>%
+    # describe(
+    #   with = list(dscr_boxplot()),
+    #   Sepal.Width
+    # ) %>%
     to_pdf(name = "iris_test_page")
 
   unlink("iris_test_page_1.pdf")

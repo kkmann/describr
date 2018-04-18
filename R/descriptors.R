@@ -107,6 +107,68 @@ get_description.dscr_freq <- function(td, variable_group, variable_all) {
 
 
 
+# Factor frequency chart=======================================================
+dscr_factor_barchart <- function(
+  label = "Bar diagram",
+  level_text_size = 2,
+  pvalues   = list(dscr_cross_table_chisq()),
+  minheight = unit(1.5, "cm"),
+  minwidth  = unit(2, "cm")
+) {
+
+  structure(
+    list(
+      label = label,
+      level_text_size = level_text_size,
+      pvalues = pvalues,
+      minheight = minheight,
+      minwidth = minwidth
+    ),
+    class = c("dscr_factor_barchart", "PlotDescriptor", "Descriptor")
+  )
+
+}
+
+setup.dscr_factor_barchart <- function(d, variable, group, ...) {
+
+  d$ylim <- c(
+    0,
+    data_frame(variable, group) %>%
+      group_by(variable, group) %>%
+      summarize(n = n()) %>%
+      group_by(group) %>%
+      mutate(freq = n / sum(n)) %>%
+      .[["freq"]] %>%
+      max()
+  )
+
+  return(d)
+
+}
+
+get_call.dscr_factor_barchart <- function(pd, ...) {
+
+  substitute(
+    mutate(variable = addNA(variable, ifany = TRUE)) %>%
+    ggplot(aes(variable)) +
+      geom_bar(aes(y = (..count..)/sum(..count..))) +
+      geom_text(
+        aes(y = tmp2, label = variable),
+        hjust = 0,
+        color = "white",
+        size  = tmp3,
+        data = data_frame(
+          variable = levels(addNA(df$variable, ifany = TRUE))
+        )
+      ) +
+      ylim(tmp) +
+      coord_flip(),
+    list(tmp = pd$ylim, tmp2 = pd$ylim[2]/20, tmp3 = pd$level_text_size)
+  )
+
+}
+
+
 
 
 
@@ -321,6 +383,10 @@ get_call.dscr_histogram <- function(pd, ...) {
     list(tmp = pd$breaks)
   )
 }
+
+
+
+
 
 
 
