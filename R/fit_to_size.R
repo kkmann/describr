@@ -25,6 +25,17 @@ fit_to_size.describrGtable <- function(
     split_pages(maxheight = unit(height, "in")) ->
   grob_list
 
-  return(grob_list)
+  res <- structure(
+    grob_list,
+    class = c("describrGrobList", "list")
+  )
+
+  return(res)
+
+}
+
+print.describrGrobList <- function(x, ...) {
+
+  lapply(x, print)
 
 }
