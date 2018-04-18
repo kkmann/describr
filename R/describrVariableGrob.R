@@ -52,19 +52,37 @@ variableGrob <- function(dscr, varname) {
       varname <- ""
   }
 
+  varlabel <- element_table_grob(
+    theme$body$style$variables,
+    varname,
+    theme$colwidths$variables,
+    name = sprintf("%s_variable_label", varname),
+    dscr = dscr,
+    colname = "__variables__"
+  )
+
+  if (
+    convertUnit(sum(gt$heights), "in", valueOnly = TRUE) <
+    convertUnit(grobHeight(varlabel), "in", valueOnly = TRUE)
+  ) {
+    # add dummy row
+    gt <- gtable_add_rows(gt,
+      heights = unit(
+        convertUnit(grobHeight(varlabel), "in", valueOnly = TRUE) -
+        convertUnit(sum(gt$heights), "in", valueOnly = TRUE),
+        "in"
+      ),
+      pos = -1
+    )
+  }
+
   gt <- gtable_add_grob(
     gt,
-    element_table_grob(
-      theme$body$style$variables,
-      varname,
-      theme$colwidths$variables,
-      name = sprintf("%s_variable_label", varname),
-      dscr = dscr,
-      colname = "__variables__"
-    ),
+    varlabel,
     1, 1, nrow(gt), 1,
     name = sprintf("%s_variable_label", varname)
   )
+  #gt$heights <- max(gt$heights, grobHeight(varlabel)) %>% to_inches()
 
   return(gt)
 
