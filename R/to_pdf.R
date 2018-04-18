@@ -30,14 +30,21 @@ to_pdf.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, ...) {
   as_gtable(x) %>%
     optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
     split_pages(maxheight = unit(maxheight, "in")) ->
-    grob_list
+  grob_list
 
   for (i in 1:length(grob_list)) {
 
+    pdf(sprintf("%s_%i.pdf", name, i))
+
+    width  <- convertUnit(sum(grob_list[[i]]$widths), "in", valueOnly = TRUE)
+    height <- convertUnit(sum(grob_list[[i]]$heights), "in", valueOnly = TRUE)
+
+    dev.off()
+
     pdf(
       sprintf("%s_%i.pdf", name, i),
-      width  = convertUnit(sum(grob_list[[i]]$widths), "in", valueOnly = TRUE),
-      height = convertUnit(sum(grob_list[[i]]$heights), "in", valueOnly = TRUE)
+      width  = width,
+      height = height
     )
 
     grid.draw(grob_list[[i]])

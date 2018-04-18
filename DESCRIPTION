@@ -38,6 +38,7 @@ Collate:
   'descriptors.R'
   'optimize_colwidths.R'
   'split_pages.R'
+  'fit_to_size.R'
   'to_pdf.R'
   'to_png.R'
   'theme_new.R'

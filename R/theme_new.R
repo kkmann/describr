@@ -131,8 +131,14 @@ theme_bottom_default <- function(
     text_size        = text_size,
     text_line_height = text_line_height,
     style = list(
+      caption  = element_table_cell_text(
+        text_size,
+        text_padding = unit(text_size, "pt"),
+        text_align = c("left", "top"),
+        grob_align = c("center", "top")
+      ),
       footnote  = element_table_cell_text(
-        text_size/2,
+        .66*text_size,
         text_padding = unit(text_size, "pt"),
         text_align = c("left", "top"),
         grob_align = c("center", "top")

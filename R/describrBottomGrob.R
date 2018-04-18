@@ -23,7 +23,14 @@ bottomGrob <- function(dscr, gtable, footnote_text = "") {
 
   final_footnote <- element_table_grob(
     theme$style$footnote,
-    sprintf("%s %s.", footnote_text, pvalues_footnote),
+    pvalues_footnote,
+    width = width,
+    name = "footnote"
+  )
+
+  final_footnote2 <- element_table_grob(
+    theme$style$caption,
+    footnote_text,
     width = width,
     name = "footnote"
   )
@@ -34,7 +41,29 @@ bottomGrob <- function(dscr, gtable, footnote_text = "") {
     name = "bottom_separator"
   )
 
-  footer <- rbind(separator, final_footnote)
+  blank_line <- element_table_grob(
+    element_table_horizontal_separator(text_size = theme$style$caption$text_size, separator_line_size = 0),
+    widths = width,
+    name = "bottom_blank_line"
+  )
+
+  if (nchar(footnote_text) > 0) {
+
+    footer <- rbind(
+      separator,
+      final_footnote,
+      blank_line,
+      final_footnote2
+    )
+
+  } else {
+
+    footer <- rbind(
+      separator,
+      final_footnote
+    )
+
+  }
 
   return(footer)
 

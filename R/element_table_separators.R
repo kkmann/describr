@@ -46,17 +46,19 @@ element_table_grob.element_table_horizontal_separator <- function(
   )
 
   # add line
-  gt <- gtable_add_grob(gt,
-    linesGrob(
-      y    = unit(0.5, "npc"),
-      name = paste0(name, "_line"),
-      gp   = gpar(
-        alpha = e$separator_transparency,
-        lty   = e$separator_line_style,
-        col   = e$separator_line_color
-      )
-    ), 1, 1, 1, ncol(gt), -Inf
-  )
+  if (e$separator_line_size > 0) {
+    gt <- gtable_add_grob(gt,
+      linesGrob(
+        y    = unit(0.5, "npc"),
+        name = paste0(name, "_line"),
+        gp   = gpar(
+          alpha = e$separator_transparency,
+          lty   = e$separator_line_style,
+          col   = e$separator_line_color
+        )
+      ), 1, 1, 1, ncol(gt), -Inf
+    )
+  }
 
   return(gt)
 
