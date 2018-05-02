@@ -51,6 +51,7 @@ NULL
 #'   }
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' iris %>%
 #'   describr(
@@ -58,6 +59,7 @@ NULL
 #'     pvalues = TRUE,
 #'     theme_new = theme_default(text_size = 9)
 #'  )
+#'  }
 #'
 #' @export
 describr <- function(

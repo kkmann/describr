@@ -85,6 +85,7 @@ get_pvalues.default <- function(d, variable_all, group) {
 #'   are added to the specified variables.
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' iris %>%
 #' describr(by = Species) %>%
@@ -99,7 +100,7 @@ get_pvalues.default <- function(d, variable_all, group) {
 #' describr(by = Species) %>%
 #' describe(with = dscr_mean_sd(), contains("Sepal.")) %>%
 #' describe(with = dscr_mean(), Sepal.Length, APPEND = TRUE) # keeps previous choice
-#'
+#' }
 #' @name describe
 #' @export
 describe <- function(dscr, with, append = FALSE, ...) {
