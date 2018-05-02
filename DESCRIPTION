@@ -1,11 +1,11 @@
 Package: describr
 Type: Package
 Title: Beautiful Descriptive Tables 
-Version: 0.1.0
+Version: 0.2.0
 Author: Kevin Kunzmann
 Maintainer: Kevin Kunzmann <kunzmann@imbi.uni-heidelberg.de>
 Description: Create univariate descriptive tables for statistical reports.
-  Custom descriptors can be defined an the tables may contain graphics.
+  Custom descriptors can be defined an the tables may contain graphics. 
 License: MIT
 Encoding: UTF-8
 LazyData: true

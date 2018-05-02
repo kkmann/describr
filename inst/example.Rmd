@@ -1,0 +1,54 @@
+---
+title: "Example"
+author: "Kevin Kunzmann"
+date: "2 Mai 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.pos = "H")
+library(dplyr)
+library(describr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r describe, fig.width=8, fig.height=11, message=FALSE}
+# create dataset with dummy factor
+iris %>%
+  mutate(
+    `I am a factor with very long variable-name` = factor(
+      sample(1:4, nrow(iris), replace = TRUE),
+      labels = c("hi", "ho", "xXx", "I am a level with long level-name")
+    )
+  ) ->
+df_iris_test
+
+
+
+# describe data frame
+df_iris_test %>%
+  describr(
+    by = Species, 
+    pvalues = TRUE,
+    theme_new = theme_default(text_size = 9) # unit: pt
+  ) %>%
+  describe_if(
+    is.numeric,
+    with = list(
+      dscr_mean_sd(),
+      dscr_median_q1_q3(),
+      dscr_min_max(),
+      dscr_histogram()
+    )
+  ) %>%
+  describe_if(
+    is.factor,
+    with = list(dscr_freq(), dscr_factor_barchart())
+  ) %>%
+  fit_to_size()
+```

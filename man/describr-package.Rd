@@ -6,8 +6,7 @@
 \title{describr: making univariate descriptive tables fun in R}
 \description{
 This package provides functionality to define descriptive tables
-with minimum
-effort and human-readable code using non-standard evaluation.
+with minimum effort and human-readable code.
 It is designed to work well with the tidyverse and heavily relies on
 functionality of \code{\link[dplyr]{select}} and
 \code{\link[dplyr]{select_if}} of the \code{\link[dplyr]{dplyr}} package.
