@@ -50,15 +50,6 @@ NULL
 #'      \item{\code{theme_new}}{The theme to use for plotting. TODO: rename}
 #'   }
 #'
-#' @examples
-#' library(dplyr)
-#' iris %>%
-#'   describr(
-#'     by = Species,
-#'     pvalues = TRUE,
-#'     theme_new = theme_default(text_size = 9)
-#'  )
-#'
 #' @export
 describr <- function(
   df,
