@@ -26,7 +26,7 @@ to_png <- function(x, name, ...) {
 #'
 #' @name to_png
 #' @export
-to_png.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, dpi = 96, ...) {
+to_png.describr <- function(x, name, maxwidth = Inf, maxheight = Inf, dpi = 96, ...) {
 
   as_gtable(x) %>%
     optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
@@ -55,7 +55,7 @@ to_png.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, dpi = 96, 
 #'
 #' @name to_png
 #' @export
-to_png.describrGtable <- function(x, name, maxwidth = 6.5, maxheight = Inf, dpi = 96, ...) {
+to_png.describrGtable <- function(x, name, maxwidth = Inf, maxheight = Inf, dpi = 96, ...) {
 
   width <- convertUnit(x, "in", valueOnly = TRUE)
 
