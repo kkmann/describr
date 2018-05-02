@@ -51,6 +51,7 @@ NULL
 #'   }
 #'
 #' @examples
+#' library(dplyr)
 #' iris %>%
 #'   describr(
 #'     by = Species,
