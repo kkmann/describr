@@ -1,8 +1,7 @@
 #' @title describr: making univariate descriptive tables fun in R
 #'
 #' @description This package provides functionality to define descriptive tables
-#' with minimum
-#' effort and human-readable code using non-standard evaluation.
+#' with minimum effort and human-readable code.
 #' It is designed to work well with the tidyverse and heavily relies on
 #' functionality of \code{\link[dplyr]{select}} and
 #' \code{\link[dplyr]{select_if}} of the \code{\link[dplyr]{dplyr}} package.
@@ -27,7 +26,7 @@ NULL
 #' @param df a data frame.
 #' @param by unquoted name of optional stratifying factor
 #' @param theme_new theme to use
-#' @param pvalus Flag indicating whether p-values for homogeneity null hypothesis
+#' @param pvalues Flag indicating whether p-values for homogeneity null hypothesis
 #'   should be printed if available.
 #' @param total Flag indicating whether all descriptors should also be given
 #'   for the total sample.
@@ -50,6 +49,14 @@ NULL
 #'        factor.}
 #'      \item{\code{theme_new}}{The theme to use for plotting. TODO: rename}
 #'   }
+#'
+#' @examples
+#' iris %>%
+#'   describr(
+#'     by = Species,
+#'     pvalues = TRUE,
+#'     theme_new = theme_default(text_size = 9)
+#'  )
 #'
 #' @export
 describr <- function(

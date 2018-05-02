@@ -78,36 +78,56 @@ get_pvalues.default <- function(d, variable_all, group) {
 #'   \code{\link[dplyr]{dplyr}}'s \code{\link[dplyr]{select}}.
 #'   All descriptors specified in \code{with} are used for the selected variables.
 #'   Currently not used for \code{describe_if}.
+#' @param APPEND [=FALSE] flag indicating whether previously defined descriptors
+#'   should be overwritten.
 #'
 #' @return An object of class \code{\link{describr}} where the defined descriptors
 #'   are added to the specified variables.
 #'
+#' @examples
+#' iris %>%
+#' describr(by = Species) %>%
+#' describe(with = dscr_mean_sd(), contains("Sepal."))
+#'
+#' iris %>%
+#' describr(by = Species) %>%
+#' describe(with = dscr_mean_sd(), contains("Sepal.")) %>%
+#' describe(with = dscr_mean(), Sepal.Length) # overwrites previous choice completely
+#'
+#' iris %>%
+#' describr(by = Species) %>%
+#' describe(with = dscr_mean_sd(), contains("Sepal.")) %>%
+#' describe(with = dscr_mean(), Sepal.Length, APPEND = TRUE) # keeps previous choice
+#'
 #' @name describe
 #' @export
-describe <- function(dscr, with, ...) {
+describe <- function(dscr, with, append = FALSE, ...) {
   UseMethod("describe", with)
 }
 
 
 
-describe.default <- function(dscr, with, ...) {
+describe.default <- function(dscr, with, ..., APPEND = FALSE) {
 
-  tmp <- sys.call()
-
-  nc  <- list(quote(select), quote(dscr$df))
-
-  for (i in 4:length(tmp)) {
-    nc <- c(nc, tmp[[i]])
-  }
-
-  vars <- names(eval(as.call(nc)))
+  # extract variable names as character vector
+  vars <- dplyr::select(dscr$df, ...) %>%
+    names()
 
   if (is(with, "Descriptor")) {
     with <- list(with)
+  } else {
+    stop("'with' must be of class 'Descriptor'")
   }
 
-  for (i in 1:length(vars)) {
-    dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
+  if (APPEND) {
+    for (i in 1:length(vars)) {
+      dscr$core[[vars[i]]] <- c(dscr$core[[vars[i]]], with)
+    }
+  } else {
+    # overwrite previous descriptors
+    for (i in 1:length(vars)) {
+      dscr$core[[vars[i]]] <- with
+    }
   }
 
   return(dscr)
@@ -134,15 +154,8 @@ describe_if <- function(dscr, .predicate, with, ...) {
 
 describe_if.default <- function(dscr, .predicate, with, ...) {
 
-  tmp <- sys.call()
-
-  nc  <- list(
-    quote(select_if),
-    quote(dscr$df),
-    tmp[[3]]
-  )
-
-  vars <- names(eval(as.call(nc)))
+  vars <- dplyr::select_if(dscr$df, .predicate = .predicate, ...) %>%
+    names()
 
   if (is(with, "Descriptor")) {
     with <- list(with)

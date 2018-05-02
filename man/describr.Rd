@@ -14,7 +14,7 @@ describr(df, by = NULL, theme_new = theme_default(), pvalues = FALSE,
 
 \item{theme_new}{theme to use}
 
-\item{pvalus}{Flag indicating whether p-values for homogeneity null hypothesis
+\item{pvalues}{Flag indicating whether p-values for homogeneity null hypothesis
 should be printed if available.}
 
 \item{total}{Flag indicating whether all descriptors should also be given
@@ -44,4 +44,13 @@ An object of class \code{describr < list} with fields:
 This is the core object for \code{describr} package.
 All information required to create a descriptive table for a data frame is
 stored a \code{describr}-object.
+}
+\examples{
+iris \%>\%
+  describr(
+    by = Species,
+    pvalues = TRUE,
+    theme_new = theme_default(text_size = 9)
+ )
+
 }
