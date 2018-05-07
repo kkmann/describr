@@ -16,7 +16,6 @@ NULL
 
 
 
-
 #' \code{describr} object
 #'
 #' This is the core object for \code{describr} package.
@@ -49,14 +48,6 @@ NULL
 #'        factor.}
 #'      \item{\code{theme_new}}{The theme to use for plotting. TODO: rename}
 #'   }
-#'
-#' @examples
-#' iris %>%
-#'   describr(
-#'     by = Species,
-#'     pvalues = TRUE,
-#'     theme_new = theme_default(text_size = 9)
-#'  )
 #'
 #' @export
 describr <- function(
