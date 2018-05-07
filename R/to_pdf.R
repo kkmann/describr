@@ -25,7 +25,7 @@ to_pdf <- function(x, name, ...) {
 #'
 #' @name to_pdf
 #' @export
-to_pdf.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, ...) {
+to_pdf.describr <- function(x, name, maxwidth = Inf, maxheight = Inf, ...) {
 
   as_gtable(x) %>%
     optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
@@ -61,7 +61,7 @@ to_pdf.describr <- function(x, name, maxwidth = 6.5, maxheight = Inf, ...) {
 #'
 #' @name to_pdf
 #' @export
-to_pdf.describrGtable <- function(x, name, maxwidth = 6.5, maxheight = Inf, ...) {
+to_pdf.describrGtable <- function(x, name, maxwidth = Inf, maxheight = Inf, ...) {
 
   width <- convertUnit(x, "in", valueOnly = TRUE)
 

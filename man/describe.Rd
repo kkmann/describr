@@ -6,7 +6,7 @@
 \alias{describe_if}
 \title{Specify descriptors for a table}
 \usage{
-describe(dscr, with, ...)
+describe(dscr, with, append = FALSE, ...)
 
 describe_if(dscr, .predicate, with, ...)
 }
@@ -22,6 +22,9 @@ Currently not used for \code{describe_if}.}
 
 \item{descr}{\code{\link{describr}} object; the specified descriptors will
 be added for the selected variables in \code{dscr}.}
+
+\item{APPEND}{[=FALSE] flag indicating whether previously defined descriptors
+should be overwritten.}
 }
 \value{
 An object of class \code{\link{describr}} where the defined descriptors

@@ -12,10 +12,10 @@
 \usage{
 to_png(x, name, ...)
 
-\method{to_png}{describr}(x, name, maxwidth = 6.5, maxheight = Inf,
+\method{to_png}{describr}(x, name, maxwidth = Inf, maxheight = Inf,
   dpi = 96, ...)
 
-\method{to_png}{describrGtable}(x, name, maxwidth = 6.5, maxheight = Inf,
+\method{to_png}{describrGtable}(x, name, maxwidth = Inf, maxheight = Inf,
   dpi = 96, ...)
 
 \method{to_png}{list}(x, name, dpi = 96, ...)

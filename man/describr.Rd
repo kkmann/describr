@@ -45,12 +45,3 @@ This is the core object for \code{describr} package.
 All information required to create a descriptive table for a data frame is
 stored a \code{describr}-object.
 }
-\examples{
-iris \%>\%
-  describr(
-    by = Species,
-    pvalues = TRUE,
-    theme_new = theme_default(text_size = 9)
- )
-
-}

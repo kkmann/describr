@@ -12,9 +12,9 @@
 \usage{
 to_pdf(x, name, ...)
 
-\method{to_pdf}{describr}(x, name, maxwidth = 6.5, maxheight = Inf, ...)
+\method{to_pdf}{describr}(x, name, maxwidth = Inf, maxheight = Inf, ...)
 
-\method{to_pdf}{describrGtable}(x, name, maxwidth = 6.5, maxheight = Inf,
+\method{to_pdf}{describrGtable}(x, name, maxwidth = Inf, maxheight = Inf,
   ...)
 
 \method{to_pdf}{list}(x, name, ...)
