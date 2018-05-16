@@ -159,7 +159,7 @@ get_call.dscr_factor_barchart <- function(pd, ...) {
         color = "white",
         size  = tmp3,
         data = data_frame(
-          variable = levels(addNA(df$variable, ifany = TRUE))
+          variable = levels(addNA(df$variable))
         )
       ) +
       coord_cartesian(ylim = tmp) +
