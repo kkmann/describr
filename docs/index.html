@@ -64,7 +64,7 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#describr---publication-quality-descriptive-tables-with-r" class="anchor"></a>describr - publication quality descriptive tables with R</h1></div>
 
-<p>Tired of fiddling with boring ‘univariat descriptive tables’ that everybody (should) want but nobody wants to do - <code>describr</code> (hopefully) resolves this issue and makes generating nice-looking descriptive tables (almost) fun!</p>
+<p>Tired of fiddling with boring ‘univariat descriptive tables’ that everybody (should) want but nobody wants to do - <code>describr</code> (hopefully) resolves this issue and makes generating nice-looking descriptive tables (almost) fun! The main concept is to use ggplot2-like syntax for defining a table and to create the table as a graphics object. The latter allows graphs for describing variables alongside simple statistics and (eventually) finer control over the layout of a table. This is necessary as the primary objective is to create tables for pdf reports which need to take space constraints into account. Please note that this work is very much in an alpha stage. The API and core functionality might still change and the code-base is extremely untidy.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -72,44 +72,10 @@
 <div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">'kkmann/describr'</span>)</code></pre></div>
 <p>to install the most recent version (might be unstable).</p>
 </div>
-<div id="intro" class="section level2">
+<div id="documentation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#intro" class="anchor"></a>Intro</h2>
-<p>The package provides functions <code>describr</code>, <code>describe</code>, <code>describe_if</code>, and several default descriptive statistics / graphs but is designed to be extended by custom descriptive statistics or graphics. The main purpose is to typeset tables of univarite descriptive statistics with given size constraints (as for instance in .pdf documents generated using <code>knitr</code>).</p>
-<p>A simple example can be found at /inst/example.Rmd which essentially does the following:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="co"># create dataset with dummy factor</span>
-iris <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="st">`</span><span class="dt">I am a factor with very long variable-name</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(
-      <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="kw">nrow</span>(iris), <span class="dt">replace =</span> <span class="ot">TRUE</span>),
-      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">"hi"</span>, <span class="st">"ho"</span>, <span class="st">"xXx"</span>, <span class="st">"I am a level with long level-name"</span>)
-    )
-  ) -&gt;
-df_iris_test
-
-<span class="co"># describe data frame</span>
-df_iris_test <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="reference/describr.html">describr</a></span>(
-    <span class="dt">by =</span> Species, 
-    <span class="dt">pvalues =</span> <span class="ot">TRUE</span>,
-    <span class="dt">theme_new =</span> <span class="kw">theme_default</span>(<span class="dt">text_size =</span> <span class="dv">9</span>) <span class="co"># unit: pt</span>
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="reference/describe.html">describe_if</a></span>(
-    is.numeric,
-    <span class="dt">with =</span> <span class="kw">list</span>(
-      <span class="kw">dscr_mean_sd</span>(),
-      <span class="kw">dscr_median_q1_q3</span>(),
-      <span class="kw">dscr_min_max</span>(),
-      <span class="kw">dscr_histogram</span>()
-    )
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="reference/describe.html">describe_if</a></span>(
-    is.factor,
-    <span class="dt">with =</span> <span class="kw">list</span>(<span class="kw">dscr_freq</span>(), <span class="kw">dscr_factor_barchart</span>())
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit_to_size</span>()
-  </code></pre></div>
-<p>Here, <code>fit_to_size()</code> ensures that the table is fit to the size of the currently active plotting device. This is especially handy when using <code>knitr</code>’s <code>fig.width</code> or <code>fig.height</code> options. Further note that tables which are too long for the available size are automatically split to multiple plot allowing them to be spread over multiple pages.</p>
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<p>Please refer to <a href="https://kkmann.github.io/describr/articles/describr.html">Getting Started</a> for a brief introduction and the <a href="https://kkmann.github.io/describr/reference/index.html">Function Reference</a> for details.</p>
 </div>
 <div id="todo" class="section level2">
 <h2 class="hasAnchor">
