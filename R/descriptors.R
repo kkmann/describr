@@ -93,7 +93,8 @@ get_label.dscr_freq <- function(td, variable_all) {
 
 get_description.dscr_freq <- function(td, variable_group, variable_all) {
 
-  tbl    <- variable_group %>% table(useNA = "always")
+  tbl    <- variable_group %>%
+    table(useNA = "always")
   counts <- as.numeric(tbl)
   freqs  <- counts / sum(counts)
   res    <- c(
@@ -107,7 +108,7 @@ get_description.dscr_freq <- function(td, variable_group, variable_all) {
 
 
 
-# Factor frequency chart=======================================================
+# Factor frequency chart ======================================================
 dscr_factor_barchart <- function(
   label = "Bar diagram",
   level_text_size = 2,
@@ -130,6 +131,17 @@ dscr_factor_barchart <- function(
 }
 
 setup.dscr_factor_barchart <- function(d, variable, group, ...) {
+
+  print(c(
+    0,
+    data_frame(variable, group) %>%
+      group_by(variable, group) %>%
+      summarize(n = n()) %>%
+      group_by(group) %>%
+      mutate(freq = n / sum(n)) %>%
+      .[["freq"]] %>%
+      max()
+  ))
 
   d$ylim <- c(
     0,
@@ -161,7 +173,7 @@ get_call.dscr_factor_barchart <- function(pd, ...) {
           variable = levels(addNA(df$variable, ifany = TRUE))
         )
       ) +
-      ylim(tmp) +
+      coord_cartesian(ylim = tmp) +
       coord_flip(),
     list(tmp = pd$ylim, tmp2 = pd$ylim[2]/20, tmp3 = pd$level_text_size)
   )
