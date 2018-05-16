@@ -21,7 +21,7 @@ library(describr)
 
 
 
-# Univariate descriptive tables with describr
+## Univariate descriptive tables with describr
 
 ```{r example-data}
 # create dataset with dummy factor
