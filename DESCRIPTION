@@ -9,6 +9,7 @@ Description: Create univariate descriptive tables for statistical reports.
 License: MIT
 Encoding: UTF-8
 LazyData: true
+BugReports: https://github.com/kkmann/describr/issues
 Depends:
   dplyr
 Imports:
