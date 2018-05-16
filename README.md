@@ -7,8 +7,8 @@
 ## Why describr?
 
 Tired of fiddling with boring 'univariat descriptive tables' that most people 
-(should) have in their papers but nobody wants to do 
-- `describr` (hopefully) resolves this by making generating nice-looking 
+(should) have in their papers but nobody wants to do - 
+describr (hopefully) resolves this by making generating nice-looking 
 descriptive tables (almost) fun!
 
 The main concept is to use ggplot2-like syntax for defining a table and to 
