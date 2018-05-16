@@ -2,15 +2,16 @@ Package: describr
 Type: Package
 Title: Beautiful Descriptive Tables 
 Version: 0.2.0
-Author: Kevin Kunzmann
+Authors@R: person("Kevin", "Kunzmann", role = c("aut", "cre"), email = "kunzmann@imbi.uni-heidelberg.de")
 Maintainer: Kevin Kunzmann <kunzmann@imbi.uni-heidelberg.de>
 Description: Create univariate descriptive tables for statistical reports.
   Custom descriptors can be defined an the tables may contain graphics. 
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports: 
-  dplyr,
+Depends:
+  dplyr
+Imports:
   tidyr,
   ggplot2,
   gtable, 
@@ -22,8 +23,11 @@ Imports:
   kSamples, 
   car,
   methods
-Suggests: testthat
-Collate: 
+Suggests: 
+  testthat,
+  knitr,
+  rmarkdown
+Collate:
   'util.R'
   'pvalues.R'
   'Descriptor.R'
@@ -44,3 +48,4 @@ Collate:
   'theme_new.R'
   'theme_debug.R'
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
