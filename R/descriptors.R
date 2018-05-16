@@ -132,6 +132,17 @@ dscr_factor_barchart <- function(
 
 setup.dscr_factor_barchart <- function(d, variable, group, ...) {
 
+  print(c(
+    0,
+    data_frame(variable, group) %>%
+      group_by(variable, group) %>%
+      summarize(n = n()) %>%
+      group_by(group) %>%
+      mutate(freq = n / sum(n)) %>%
+      .[["freq"]] %>%
+      max()
+  ))
+
   d$ylim <- c(
     0,
     data_frame(variable, group) %>%
