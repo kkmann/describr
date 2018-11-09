@@ -1,12 +1,12 @@
 Package: describr
 Type: Package
 Title: Beautiful Descriptive Tables 
-Version: 0.2.0
+Version: 0.2.2
 Authors@R: person("Kevin", "Kunzmann", role = c("aut", "cre"), email = "kunzmann@imbi.uni-heidelberg.de")
 Maintainer: Kevin Kunzmann <kunzmann@imbi.uni-heidelberg.de>
 Description: Create univariate descriptive tables for statistical reports.
   Custom descriptors can be defined an the tables may contain graphics. 
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/kkmann/describr/issues

@@ -34,7 +34,6 @@ test_that("Iris complete", {
         dscr_factor_barchart()
       )
     ) %>%
-    fit_to_size(width = 8, height = 8) %>%
     to_pdf(name = "iris_test_page")
 
   unlink("iris_test_page_1.pdf")

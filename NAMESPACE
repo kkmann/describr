@@ -5,11 +5,7 @@ import(
   gtable,
   dplyr,
   ggplot2,
-  tidyr,
-  ompr,
-  ompr.roi,
-  ROI,
-  ROI.plugin.glpk
+  tidyr
 )
 
 importFrom("grDevices", "dev.off", "pdf")

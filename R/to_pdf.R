@@ -25,10 +25,9 @@ to_pdf <- function(x, name, ...) {
 #'
 #' @name to_pdf
 #' @export
-to_pdf.describr <- function(x, name, maxwidth = Inf, maxheight = Inf, ...) {
+to_pdf.describr <- function(x, name, maxheight = Inf, ...) {
 
   as_gtable(x) %>%
-    optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
     split_pages(maxheight = unit(maxheight, "in")) ->
   grob_list
 
@@ -70,10 +69,7 @@ to_pdf.describrGtable <- function(x, name, maxwidth = Inf, maxheight = Inf, ...)
       split_pages(maxheight = unit(maxheight, "in")) ->
       grob_list
   } else {
-    x %>%
-      optimize_columnwidths(maxwidth = unit(maxwidth, "in")) %>%
-      split_pages(maxheight = unit(maxheight, "in")) ->
-      grob_list
+    stop("width optimization not implemented")
   }
 
   for (i in 1:length(grob_list)) {
