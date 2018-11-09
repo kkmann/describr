@@ -8,8 +8,8 @@
 <title>Beautiful Descriptive Tables  • describr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="Beautiful Descriptive Tables ">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script><meta property="og:title" content="Beautiful Descriptive Tables ">
 <meta property="og:description" content="Create univariate descriptive tables for statistical reports.
   Custom descriptors can be defined an the tables may contain graphics. ">
 <meta name="twitter:card" content="summary">
@@ -67,11 +67,7 @@
 <div id="why-describr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#why-describr" class="anchor"></a>Why describr?</h2>
-<p>Tired of fiddling with boring ‘univariat descriptive tables’ that most people (should) have in their papers but nobody wants to do</p>
-<ul>
-<li>
-<code>describr</code> (hopefully) resolves this by making generating nice-looking descriptive tables (almost) fun!</li>
-</ul>
+<p>Tired of fiddling with boring ‘univariat descriptive tables’ that most people (should) have in their papers but nobody wants to do - describr (hopefully) resolves this by making generating nice-looking descriptive tables (almost) fun!</p>
 <p>The main concept is to use ggplot2-like syntax for defining a table and to create the table as a graphics object. The latter allows graphs for describing variables alongside simple statistics and (eventually) finer control over the layout of a table. This is necessary as the primary objective is to create tables for pdf reports which need to take spaceconstraints into account.</p>
 <p>In contrast to other packages providing descriptive tables functionality in R, describr is less flexible in the output format (always graphics). Yet this opens up new possibilities (graphs in tables) and finer layout control which would not be possible for a Markdown/pandoc approach.</p>
 <p>Another core principle is extensibility. Users should be able to add new descriptors (stats or graphs) in a fairly easy way.</p>
@@ -87,7 +83,7 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Make sure that the <code>devtools</code> package is installed and run</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">'kkmann/describr'</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">'kkmann/describr'</span>)</a></code></pre></div>
 <p>to install the most recent version (might be unstable).</p>
 </div>
 <div id="documentation" class="section level2">

@@ -35,13 +35,13 @@ iris %>%
 df_iris_test
 ```
 
-```{r describe, fig.width=7, fig.height=10, message=FALSE}
+```{r describe, fig.width=7.5, fig.height=8, message=FALSE, warning=FALSE}
 # describe data frame
 df_iris_test %>%
   describr(
     by = Species, 
     pvalues = TRUE,
-    theme_new = theme_default(text_size = 9) # unit: pt
+    theme_new = theme_default(text_size = 7) # unit: pt
   ) %>%
   describe_if(
     is.numeric,
@@ -55,6 +55,5 @@ df_iris_test %>%
   describe_if(
     is.factor,
     with = list(dscr_freq(), dscr_factor_barchart())
-  ) %>%
-  fit_to_size()
+  ) 
 ```

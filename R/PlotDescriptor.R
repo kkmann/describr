@@ -58,7 +58,7 @@ as_gtable.PlotDescriptor <- function(pd, dscr, variable, group) {
         tmp <- eval(parse(text = str))
         mappings <- lapply(tmp$mapping, as.character)
         if ("x" %in% names(mappings)) {
-          if (mappings$x == "variable" & is.numeric(variable)) {
+          if ("variable" %in% mappings$x & is.numeric(variable)) {
             str <- paste0(str, " + xlim(range(df$variable))")
           }
         }

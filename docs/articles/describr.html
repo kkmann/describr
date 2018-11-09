@@ -8,8 +8,8 @@
 <title>Getting started with describr • describr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with describr">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with describr">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -63,7 +63,7 @@
       <h1>Getting started with describr</h1>
                         <h4 class="author">Kevin Kunzmann</h4>
             
-            <h4 class="date">2018-05-16</h4>
+            <h4 class="date">2018-11-09</h4>
       
       
       <div class="hidden name"><code>describr.Rmd</code></div>
@@ -75,37 +75,36 @@
 <div id="univariate-descriptive-tables-with-describr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#univariate-descriptive-tables-with-describr" class="anchor"></a>Univariate descriptive tables with describr</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create dataset with dummy factor</span>
-iris <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="st">`</span><span class="dt">I am a factor with very long variable-name</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(
-      <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="kw">nrow</span>(iris), <span class="dt">replace =</span> <span class="ot">TRUE</span>),
-      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">"hi"</span>, <span class="st">"ho"</span>, <span class="st">"xXx"</span>, <span class="st">"I am a level with long level-name"</span>)
-    )
-  ) -&gt;
-df_iris_test</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># describe data frame</span>
-df_iris_test <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/describr.html">describr</a></span>(
-    <span class="dt">by =</span> Species, 
-    <span class="dt">pvalues =</span> <span class="ot">TRUE</span>,
-    <span class="dt">theme_new =</span> <span class="kw">theme_default</span>(<span class="dt">text_size =</span> <span class="dv">9</span>) <span class="co"># unit: pt</span>
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/describe.html">describe_if</a></span>(
-    is.numeric,
-    <span class="dt">with =</span> <span class="kw">list</span>(
-      <span class="kw">dscr_mean_sd</span>(),
-      <span class="kw">dscr_median_q1_q3</span>(),
-      <span class="kw">dscr_min_max</span>(),
-      <span class="kw">dscr_histogram</span>()
-    )
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/describe.html">describe_if</a></span>(
-    is.factor,
-    <span class="dt">with =</span> <span class="kw">list</span>(<span class="kw">dscr_freq</span>(), <span class="kw">dscr_factor_barchart</span>())
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit_to_size</span>()</code></pre></div>
-<p><img src="describr_files/figure-html/describe-1.png" width="672"></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># create dataset with dummy factor</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">iris <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="st">`</span><span class="dt">I am a factor with very long variable-name</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">      <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="kw">nrow</span>(iris), <span class="dt">replace =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">"hi"</span>, <span class="st">"ho"</span>, <span class="st">"xXx"</span>, <span class="st">"I am a level with long level-name"</span>)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    )</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  ) -&gt;</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">df_iris_test</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># describe data frame</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">df_iris_test <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/describr.html">describr</a></span>(</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="dt">by =</span> Species, </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="dt">pvalues =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="dt">theme_new =</span> <span class="kw">theme_default</span>(<span class="dt">text_size =</span> <span class="dv">7</span>) <span class="co"># unit: pt</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="../reference/describe.html">describe_if</a></span>(</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    is.numeric,</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="dt">with =</span> <span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">      <span class="kw">dscr_mean_sd</span>(),</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">      <span class="kw">dscr_median_q1_q3</span>(),</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">      <span class="kw">dscr_min_max</span>(),</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">      <span class="kw">dscr_histogram</span>()</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">    )</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="../reference/describe.html">describe_if</a></span>(</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">    is.factor,</a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    <span class="dt">with =</span> <span class="kw">list</span>(<span class="kw">dscr_freq</span>(), <span class="kw">dscr_factor_barchart</span>())</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">  ) </a></code></pre></div>
+<p><img src="describr_files/figure-html/describe-1.png" width="720"></p>
 </div>
   </div>
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/describr.R
 \name{as_gtable}
 \alias{as_gtable}
-\alias{as_gtable}
 \alias{as_gtable.describr}
 \title{Make object plottable using \code{grid}}
 \usage{

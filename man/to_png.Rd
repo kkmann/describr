@@ -2,11 +2,8 @@
 % Please edit documentation in R/to_png.R
 \name{to_png}
 \alias{to_png}
-\alias{to_png}
 \alias{to_png.describr}
-\alias{to_png}
 \alias{to_png.describrGtable}
-\alias{to_png}
 \alias{to_png.list}
 \title{Create PNG file from plottable object}
 \usage{
@@ -15,8 +12,8 @@ to_png(x, name, ...)
 \method{to_png}{describr}(x, name, maxwidth = Inf, maxheight = Inf,
   dpi = 96, ...)
 
-\method{to_png}{describrGtable}(x, name, maxwidth = Inf, maxheight = Inf,
-  dpi = 96, ...)
+\method{to_png}{describrGtable}(x, name, maxwidth = Inf,
+  maxheight = Inf, dpi = 96, ...)
 
 \method{to_png}{list}(x, name, dpi = 96, ...)
 }
@@ -36,12 +33,4 @@ are generated and no ending is needed (e.g. 'my_file').}
 }
 \description{
 \code{to_pdf} plots an object directly into one ore multiple PDF files.
-
-For a \code{\link{describr}} or \code{describrGtable} object,
-the object it first turned into a
-plottable object respecting the given size constraints (potential split-up)
-and then plotted to pmg using \code{grid.draw()}.
-
-For a list of \code{describrGtable} objects they are plotted directly to
-png files of suitable size.
 }

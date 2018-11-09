@@ -17,10 +17,6 @@ Imports:
   ggplot2,
   gtable, 
   grid, 
-  ompr, 
-  ompr.roi, 
-  ROI,
-  ROI.plugin.glpk, 
   kSamples, 
   car,
   methods
@@ -41,12 +37,11 @@ Collate:
   'element_table_separators.R'
   'describr.R'
   'descriptors.R'
-  'optimize_colwidths.R'
   'split_pages.R'
   'fit_to_size.R'
   'to_pdf.R'
   'to_png.R'
   'theme_new.R'
   'theme_debug.R'
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

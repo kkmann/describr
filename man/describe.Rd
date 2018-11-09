@@ -2,7 +2,6 @@
 % Please edit documentation in R/Descriptor.R
 \name{describe}
 \alias{describe}
-\alias{describe}
 \alias{describe_if}
 \title{Specify descriptors for a table}
 \usage{
@@ -33,7 +32,4 @@ An object of class \code{\link{describr}} where the defined descriptors
 \description{
 \code{describe} can be used to specify \emph{which} variables should be
 described \emph{how}.
-
-\code{describe_if} allows to to specify variables by using predicates as in
-\code{\link[dplyr]{select_if}}.
 }

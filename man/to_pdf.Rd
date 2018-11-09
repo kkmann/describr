@@ -2,20 +2,18 @@
 % Please edit documentation in R/to_pdf.R
 \name{to_pdf}
 \alias{to_pdf}
-\alias{to_pdf}
 \alias{to_pdf.describr}
-\alias{to_pdf}
 \alias{to_pdf.describrGtable}
-\alias{to_pdf}
 \alias{to_pdf.list}
 \title{Create PDF file from plottable object}
 \usage{
 to_pdf(x, name, ...)
 
-\method{to_pdf}{describr}(x, name, maxwidth = Inf, maxheight = Inf, ...)
-
-\method{to_pdf}{describrGtable}(x, name, maxwidth = Inf, maxheight = Inf,
+\method{to_pdf}{describr}(x, name, maxwidth = Inf, maxheight = Inf,
   ...)
+
+\method{to_pdf}{describrGtable}(x, name, maxwidth = Inf,
+  maxheight = Inf, ...)
 
 \method{to_pdf}{list}(x, name, ...)
 }
@@ -33,12 +31,4 @@ are generated and no ending is needed (e.g. 'my_file').}
 }
 \description{
 \code{to_pdf} plots an object directly into one ore multiple PDF files.
-
-For a \code{\link{describr}} or \code{describrGtable} object,
-the object it first turned into a
-plottable object respecting the given size constraints (potentiall split-up)
-and then plotted to pdf using \code{grid.draw()}.
-
-For a list of \code{describrGtable} objects they are plotted directly to
-pdf files of suitable size.
 }
