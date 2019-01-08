@@ -11,6 +11,29 @@ iris %>%
   ) ->
 df_iris_test
 
+test_that("bla", {
+          df_iris_test %>%
+            describr(
+              by = Species,
+              pvalues = TRUE,
+              theme_new = theme_default(text_size = 7) # unit: pt
+            ) %>%
+            describe_if(
+              is.numeric,
+              with = list(
+                dscr_mean_sd(),
+                dscr_median_q1_q3(),
+                dscr_min_max(),
+                dscr_histogram()
+              )
+            ) %>%
+            describe_if(
+              is.factor,
+              with = list(dscr_freq(), dscr_factor_barchart())
+            )
+          expect_equal(1, 1)
+})
+
 test_that("Iris complete", {
 
   df_iris_test %>%
