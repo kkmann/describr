@@ -6,5 +6,5 @@ before_install:
 
 language: R
 sudo: false
-cache: packages
 warnings_are_errors: false
+cache: packages

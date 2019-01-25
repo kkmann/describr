@@ -67,7 +67,7 @@ as_gtable.TextDescriptor <- function(td, dscr, variable, group) {
   theme   <- dscr$theme_new
 
   # create character data frame holding entries
-  df_text <- as_data_frame(td, dscr, variable, group)
+  df_text <- as_data_frame.TextDescriptor(td, dscr, variable, group)
 
   # make actual grob, cannot use tableGrob as we need to control widths!
   gt <- gtable(
