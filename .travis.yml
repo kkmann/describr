@@ -7,6 +7,4 @@ before_install:
 language: R
 sudo: false
 warnings_are_errors: false
-
-before_script:
-  - Rscript -e 'library(describr); sessionInfo()'
+cache: packages
